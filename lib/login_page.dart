@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:g5_mb_campus_cleaner/signup.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool rememberUser = false;
+  bool viewPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildTop() {
     return SizedBox(
       width: mediaSize.width,
+      height: 500,
       child: const Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -56,20 +59,24 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildBottom() {
     return SizedBox(
-      width: mediaSize.width,
-      child: Card(
-        color: Colors.white,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        )),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: _buildForm(),
-        ),
-      ),
-    );
+        width: mediaSize.width,
+        height: 500,
+        child: Scrollbar(
+          child: SingleChildScrollView(
+            child: Card(
+              color: Colors.white,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              )),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: _buildForm(),
+              ),
+            ),
+          ),
+        ));
   }
 
   Widget _buildForm() {
@@ -77,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildBlackAndBoldText("Correo"),
-        _buildInputField(emailController),
+        _buildInputField(emailController, isEmail: true),
         const SizedBox(height: 40),
         _buildBlackAndBoldText("Contraseña"),
         _buildInputField(passwordController, isPassword: true),
@@ -119,15 +126,26 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildInputField(TextEditingController controller,
-      {isPassword = false}) {
+      {isPassword = false, isEmail = false, isPhone = false}) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
         suffixIcon: isPassword
-            ? const Icon(Icons.remove_red_eye)
-            : const Icon(Icons.done),
+            ? IconButton(
+                icon: const Icon(Icons.remove_red_eye),
+                onPressed: () {
+                  setState(() {
+                    viewPassword = !viewPassword;
+                  });
+                },
+              )
+            : isEmail
+                ? const Icon(Icons.email)
+                : isPhone
+                    ? const Icon(Icons.phone_android)
+                    : const Icon(Icons.text_fields),
       ),
-      obscureText: isPassword,
+      obscureText: isPassword ? !viewPassword : false,
     );
   }
 
@@ -193,13 +211,14 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildBlackText("¿Aún no tienes cuenta? Regístrate "),
-        TextButton(
-            onPressed: () {},
-            style: ButtonStyle(
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                  const EdgeInsets.all(0)),
-            ),
+        _buildBlackText("¿Aún no tienes una cuenta? Regístrate "),
+        GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SignUpScreen()),
+              );
+            },
             child: _buildGreenText("aquí"))
       ],
     );
