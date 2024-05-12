@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/login_page.dart';
+import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
+import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _LoginPageState extends State<LoginPage> {
   late Color myColor;
   late Size mediaSize;
-  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController cellphoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController secondPasswordController = TextEditingController();
   bool rememberUser = false;
-  bool viewFirstPassword = false;
-  bool viewSecondPassword = false;
+  bool viewPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +40,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildTop() {
     return SizedBox(
       width: mediaSize.width,
+      height: 500,
       child: const Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Registrarse",
+            "Iniciar Sesión",
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -86,22 +84,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildBlackAndBoldText("Nombre"),
-        _buildInputField(nameController),
-        const SizedBox(height: 40),
         _buildBlackAndBoldText("Correo"),
         _buildInputField(emailController, isEmail: true),
         const SizedBox(height: 40),
-        _buildBlackAndBoldText("Celular"),
-        _buildInputField(cellphoneController, isPhone: true),
-        const SizedBox(height: 40),
         _buildBlackAndBoldText("Contraseña"),
-        _buildInputField(passwordController,
-            isPassword: true, passwordNumber: 1),
-        const SizedBox(height: 40),
-        _buildBlackAndBoldText("Confirmar Contraseña"),
-        _buildInputField(secondPasswordController,
-            isPassword: true, passwordNumber: 2),
+        _buildInputField(passwordController, isPassword: true),
+        const SizedBox(height: 20),
+        _buildRememberForgot(),
         const SizedBox(height: 20),
         _buildLoginButton(),
         const SizedBox(height: 20),
@@ -138,10 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _buildInputField(TextEditingController controller,
-      {isPassword = false,
-      isEmail = false,
-      isPhone = false,
-      passwordNumber = 0}) {
+      {isPassword = false, isEmail = false, isPhone = false}) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -150,9 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 icon: const Icon(Icons.remove_red_eye),
                 onPressed: () {
                   setState(() {
-                    passwordNumber == 1
-                        ? viewFirstPassword = !viewFirstPassword
-                        : viewSecondPassword = !viewSecondPassword;
+                    viewPassword = !viewPassword;
                   });
                 },
               )
@@ -162,22 +146,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ? const Icon(Icons.phone_android)
                     : const Icon(Icons.text_fields),
       ),
-      obscureText: isPassword
-          ? passwordNumber == 1
-              ? !viewFirstPassword
-              : !viewSecondPassword
-          : false,
+      obscureText: isPassword ? !viewPassword : false,
+    );
+  }
+
+  Widget _buildRememberForgot() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Checkbox(
+                value: rememberUser,
+                onChanged: (value) {
+                  setState(() {
+                    rememberUser = value!;
+                  });
+                }),
+            _buildBlackText("Mantener abierto"),
+          ],
+        ),
+        TextButton(
+            onPressed: () {}, child: _buildBlackText("¿Olvidó su contraseña?"))
+      ],
     );
   }
 
   Widget _buildLoginButton() {
     return ElevatedButton(
         onPressed: () {
-          debugPrint("Nombre : ${nameController.text}");
-          debugPrint("Correo : ${emailController.text}");
-          debugPrint("Celular : ${cellphoneController.text}");
-          debugPrint("Contraseña : ${passwordController.text}");
-          debugPrint("Confirmar contraseña : ${secondPasswordController.text}");
+          debugPrint("Email : ${emailController.text}");
+          debugPrint("Password : ${passwordController.text}");
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DashboardPage()),
+          );
         },
         style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(),
@@ -186,7 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           minimumSize: const Size.fromHeight(60),
         ),
         child: const Text(
-          "Registrarse",
+          "Iniciar",
           style: TextStyle(color: Colors.white),
         ));
   }
@@ -194,7 +197,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildOtherLogin() {
     return Center(
       child: Column(
-        children: [_signup()],
+        children: [
+          _signup(),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Tab(icon: Image.asset("assets/images/gmail.png")),
+              Tab(icon: Image.asset("assets/images/facebook.png"))
+            ],
+          )
+        ],
       ),
     );
   }
@@ -203,12 +216,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildBlackText("¿Ya tienes una cuenta? Inicia sesión "),
+        _buildBlackText("¿Aún no tienes una cuenta? Regístrate "),
         GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
+                MaterialPageRoute(builder: (context) => const SignUpScreen()),
               );
             },
             child: _buildGreenText("aquí"))
