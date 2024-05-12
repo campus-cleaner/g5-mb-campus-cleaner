@@ -87,20 +87,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildBlackAndBoldText("Nombre"),
+        _buildTextWithColorAndBold("Nombre", fontWeight: FontWeight.bold),
         _buildInputField(nameController),
         const SizedBox(height: 40),
-        _buildBlackAndBoldText("Correo"),
+        _buildTextWithColorAndBold("Correo", fontWeight: FontWeight.bold),
         _buildInputField(emailController, isEmail: true),
         const SizedBox(height: 40),
-        _buildBlackAndBoldText("Celular"),
+        _buildTextWithColorAndBold("Celular", fontWeight: FontWeight.bold),
         _buildInputField(cellphoneController, isPhone: true),
         const SizedBox(height: 40),
-        _buildBlackAndBoldText("Contraseña"),
+        _buildTextWithColorAndBold("Contraseña", fontWeight: FontWeight.bold),
         _buildInputField(passwordController,
             isPassword: true, passwordNumber: 1),
         const SizedBox(height: 40),
-        _buildBlackAndBoldText("Confirmar Contraseña"),
+        _buildTextWithColorAndBold("Confirmar Contraseña", fontWeight: FontWeight.bold),
         _buildInputField(secondPasswordController,
             isPassword: true, passwordNumber: 2),
         const SizedBox(height: 20),
@@ -111,30 +111,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildBlackText(String text) {
+  Widget _buildTextWithColorAndBold(String text, { Color color = Colors.black , FontWeight fontWeight = FontWeight.normal}) {
     return Text(
       text,
-      style: const TextStyle(color: Colors.black, fontFamily: 'Quicksand'),
-    );
-  }
-
-  Widget _buildGreenText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-          color: Color.fromARGB(255, 31, 172, 90),
-          fontFamily: 'Quicksand',
-          fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget _buildBlackAndBoldText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Quicksand'),
+      style: TextStyle(color: color, fontFamily: 'Quicksand', fontWeight: fontWeight),
     );
   }
 
@@ -204,7 +184,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildBlackText("¿Ya tienes una cuenta? Inicia sesión "),
+        _buildTextWithColorAndBold("¿Ya tienes una cuenta? Inicia sesión "),
         GestureDetector(
             onTap: () {
               Navigator.push(
@@ -212,7 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
-            child: _buildGreenText("aquí"))
+            child: _buildTextWithColorAndBold("aquí", color: const Color.fromARGB(255, 31, 172, 90), fontWeight: FontWeight.bold))
       ],
     );
   }
