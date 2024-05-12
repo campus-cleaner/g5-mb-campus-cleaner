@@ -178,28 +178,39 @@ class _PendingListPage extends State<PendingListPage> {
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-        image: DecorationImage(
-            image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+        'Lista de Pendientes',
+        style: TextStyle(fontSize: 18, color: Colors.white),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(children: [
-          Positioned(top: 60, child: _buildTop()),
+        backgroundColor: const Color.fromARGB(255, 31, 172, 90) ,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+          image: DecorationImage(
+              image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
+        ),
+        child: Stack(children: [
+          Positioned(top: 5, child: _buildTop()),
           Positioned(bottom: 100, child: _buildList()),
-        ]),
-      ),
+        ])
+        )
     );
+
   }
 
   Widget _buildTop() {
     return SizedBox(
       width: mediaSize.width,
-      height: 70,
-      child: const Column(
+      height: 80,
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "Pendientes",
