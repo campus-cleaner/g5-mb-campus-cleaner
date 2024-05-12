@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
+import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 
 class PendingListPage extends StatefulWidget {
   const PendingListPage({super.key});
@@ -179,15 +180,13 @@ class _PendingListPage extends State<PendingListPage> {
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-        'Lista de Pendientes',
+      appBar: AppBar(title: const Text(
+        'Reportes Pendientes',
         style: TextStyle(fontSize: 18, color: Colors.white),
       ),
-        backgroundColor: const Color.fromARGB(255, 31, 172, 90) ,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      backgroundColor: Colors.transparent,
+          backgroundColor: const Color.fromARGB(255, 31, 172, 90),
+          iconTheme: const IconThemeData(color: Colors.white), ),
+      bottomNavigationBar: CampusNavigationBar.buildNav(context),
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
@@ -195,22 +194,19 @@ class _PendingListPage extends State<PendingListPage> {
               image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
         ),
         child: Stack(children: [
-          Positioned(top: 5, child: _buildTop()),
-          Positioned(bottom: 100, child: _buildList()),
-        ])
-        )
+          Positioned(top: 30, child: _buildTop()),
+          Positioned(bottom: 20, child: _buildList()),
+        ]),
+      ),
     );
-
   }
 
   Widget _buildTop() {
     return SizedBox(
       width: mediaSize.width,
-      height: 80,
-      child: const Row(
+      height: 70,
+      child: const Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "Pendientes",
