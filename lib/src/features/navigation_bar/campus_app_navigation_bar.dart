@@ -18,7 +18,7 @@ class CampusNavigationBar  {
       onTap: (int index) {
         switch (index) {
           case 0:
-            MaterialPageRoute(builder: (context) =>  DashboardPage());
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>  DashboardPage()));
           case 1:
         }
 
