@@ -6,15 +6,10 @@ class PendingReport {
   String? dateReport;
   bool? selected;
 
-  PendingReport({
-    this.location,
-    this.status,
-    this.dateReport,
-    this.selected = false
-  });
+  PendingReport(
+      {this.location, this.status, this.dateReport, this.selected = false});
 
-  factory PendingReport.fromJson(Map<String, dynamic> json) =>
-      PendingReport(
+  factory PendingReport.fromJson(Map<String, dynamic> json) => PendingReport(
         location: json["location"],
         status: json["status"],
         dateReport: json["dateReport"],
