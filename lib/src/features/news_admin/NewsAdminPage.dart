@@ -1,17 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
-import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
-import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/detail_report_pending.dart';
-import 'package:g5_mb_campus_cleaner/src/login/login_page.dart';
+import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 
 class NewsAdminPage extends StatefulWidget {
   const NewsAdminPage({super.key});
@@ -26,12 +21,8 @@ class _NewsAdminPage extends State<NewsAdminPage> {
 
   @override
   Widget build(BuildContext context) {
-    myColor = Theme
-        .of(context)
-        .primaryColor;
-    mediaSize = MediaQuery
-        .of(context)
-        .size;
+    myColor = Theme.of(context).primaryColor;
+    mediaSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -51,13 +42,13 @@ class _NewsAdminPage extends State<NewsAdminPage> {
               ),
               accountName: Text(
                 "Usuario XYZ",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
               accountEmail: Text(
                 "marco.mezaCancho@unmsm.edu.pe",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
               currentAccountPicture: CircleAvatar(
                 radius: 60.0,
@@ -72,13 +63,11 @@ class _NewsAdminPage extends State<NewsAdminPage> {
                 ListTile(
                   leading: const Icon(Icons.receipt_long),
                   title: const Text('Historial de Incidencias'),
-                  onTap: () =>
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (
-                              context) => const PendingListResponsiblePage(),
-                        ),
-                      ),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PendingListResponsiblePage(),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -87,7 +76,8 @@ class _NewsAdminPage extends State<NewsAdminPage> {
               title: const Text('Cerrar sesión'),
               onTap: () {
                 Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => LoginPage()),
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
                 );
               },
             )
@@ -137,8 +127,7 @@ class _NewsAdminPage extends State<NewsAdminPage> {
         width: 500,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("assets/images/new_fisi.png"))
-        ),
+                image: AssetImage("assets/images/new_fisi.png"))),
         child: Column(
           children: <Widget>[
             Row(
@@ -169,11 +158,11 @@ class _NewsAdminPage extends State<NewsAdminPage> {
             color: Colors.white,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                )),
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            )),
             child: Column(
               children: [
                 Container(
@@ -188,7 +177,6 @@ class _NewsAdminPage extends State<NewsAdminPage> {
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Quicksand'),
                         ),
-
                       ],
                     )),
                 const SizedBox(
@@ -200,13 +188,11 @@ class _NewsAdminPage extends State<NewsAdminPage> {
                 const SizedBox(
                   height: 10,
                 ),
-
               ],
             ),
           ),
         ));
   }
-
 
   _openBox() {
     showDialog(
@@ -230,71 +216,71 @@ class _NewsAdminPage extends State<NewsAdminPage> {
                   child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          child: FormBuilderFilePicker(
-                            name: "images",
-                            decoration: InputDecoration(labelText: "iMAGEN"),
-                            maxFiles: 1,
-                            validator: FormBuilderValidators.required(),
-                            previewImages: true,
-                            onChanged: (val) => print(val),
-                            typeSelectors: [
-                              TypeSelector(
-                                type: FileType.image,
-                                selector: Row(
-                                  children: <Widget>[
-                                    Icon(Icons.add_circle),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Text("Agregar imagen"),
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: FormBuilderFilePicker(
+                                name: "images",
+                                decoration:
+                                    InputDecoration(labelText: "iMAGEN"),
+                                maxFiles: 1,
+                                validator: FormBuilderValidators.required(),
+                                previewImages: true,
+                                onChanged: (val) => print(val),
+                                typeSelectors: [
+                                  TypeSelector(
+                                    type: FileType.image,
+                                    selector: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.add_circle),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text("Agregar imagen"),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
+                                onFileLoading: (val) {
+                                  print(val);
+                                },
                               ),
-                            ],
-                            onFileLoading: (val) {
-                              print(val);
-                            },
-                          ),
-                          width: 200.0,
-                          height: 100.0,
-                        ),
-                        SizedBox(height: 20,),
-                        FormBuilderTextField(
-                          name: "url",
-                          decoration: InputDecoration(labelText: "url"),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                          ]),
-                        ),
-                        ElevatedButton(
-                          child: Text("Enviar"),
-                          onPressed: () {
-                            debugPrint('validation correct ${_fbKey
-                                .currentState}');
+                              width: 200.0,
+                              height: 100.0,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            FormBuilderTextField(
+                              name: "url",
+                              decoration: InputDecoration(labelText: "url"),
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(),
+                              ]),
+                            ),
+                            ElevatedButton(
+                              child: Text("Enviar"),
+                              onPressed: () {
+                                debugPrint(
+                                    'validation correct ${_fbKey.currentState}');
 
-                            if (_fbKey.currentState?.validate() ??
-                                false) {
-                              final edificio =
-                                  _fbKey.currentState
-                                      ?.fields['images']!.value;
-                              debugPrint(
-                                  'validation correct ${edificio}');
-                            } else {
-                              debugPrint('validation failed');
-                            }
-                          },
-                        ),
-                      ])),
+                                if (_fbKey.currentState?.validate() ?? false) {
+                                  final edificio = _fbKey
+                                      .currentState?.fields['images']!.value;
+                                  debugPrint('validation correct ${edificio}');
+                                } else {
+                                  debugPrint('validation failed');
+                                }
+                              },
+                            ),
+                          ])),
                 )));
       },
     );
   }
-
 
   Widget _buildPendings() {
     return ListView.builder(

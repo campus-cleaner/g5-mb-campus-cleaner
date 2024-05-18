@@ -8,7 +8,7 @@ import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/detail_report_pending.dart';
-import 'package:g5_mb_campus_cleaner/src/login/login_page.dart';
+import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 
 class PendingListUserPage extends StatefulWidget {
   const PendingListUserPage({super.key});

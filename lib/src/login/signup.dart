@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
-import 'package:g5_mb_campus_cleaner/src/login/login_page.dart';
+import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -90,49 +89,63 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return FormBuilder(
         key: _fbKey,
         child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildTextWithColorAndBold("Nombre", fontWeight: FontWeight.bold),
-        _buildInputField("name"),
-        const SizedBox(height: 40),
-        _buildTextWithColorAndBold("Correo", fontWeight: FontWeight.bold),
-        _buildInputField("email", validatorForm: FormBuilderValidators.email(errorText: "Email inválido"), isEmail: true),
-        const SizedBox(height: 40),
-        _buildTextWithColorAndBold("Celular", fontWeight: FontWeight.bold),
-        _buildInputField("cellphone",validatorForm: FormBuilderValidators.numeric(errorText: "Debe ser un número válido"), isPhone: true),
-        const SizedBox(height: 40),
-        _buildTextWithColorAndBold("Contraseña", fontWeight: FontWeight.bold),
-        _buildInputField("password",
-            isPassword: true, passwordNumber: 1),
-        const SizedBox(height: 40),
-        _buildTextWithColorAndBold("Confirmar Contraseña", fontWeight: FontWeight.bold),
-        _buildInputField("secondPassword",
-            isPassword: true, passwordNumber: 2),
-        const SizedBox(height: 20),
-        _buildLoginButton(),
-        const SizedBox(height: 20),
-        _buildOtherLogin(),
-      ],
-    )) ;
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTextWithColorAndBold("Nombre", fontWeight: FontWeight.bold),
+            _buildInputField("name"),
+            const SizedBox(height: 40),
+            _buildTextWithColorAndBold("Correo", fontWeight: FontWeight.bold),
+            _buildInputField("email",
+                validatorForm:
+                    FormBuilderValidators.email(errorText: "Email inválido"),
+                isEmail: true),
+            const SizedBox(height: 40),
+            _buildTextWithColorAndBold("Celular", fontWeight: FontWeight.bold),
+            _buildInputField("cellphone",
+                validatorForm: FormBuilderValidators.numeric(
+                    errorText: "Debe ser un número válido"),
+                isPhone: true),
+            const SizedBox(height: 40),
+            _buildTextWithColorAndBold("Contraseña",
+                fontWeight: FontWeight.bold),
+            _buildInputField("password", isPassword: true, passwordNumber: 1),
+            const SizedBox(height: 40),
+            _buildTextWithColorAndBold("Confirmar Contraseña",
+                fontWeight: FontWeight.bold),
+            _buildInputField("secondPassword",
+                isPassword: true, passwordNumber: 2),
+            const SizedBox(height: 20),
+            _buildLoginButton(),
+            const SizedBox(height: 20),
+            _buildOtherLogin(),
+          ],
+        ));
   }
 
-  Widget _buildTextWithColorAndBold(String text, { Color color = Colors.black , FontWeight fontWeight = FontWeight.normal}) {
+  Widget _buildTextWithColorAndBold(String text,
+      {Color color = Colors.black, FontWeight fontWeight = FontWeight.normal}) {
     return Text(
       text,
-      style: TextStyle(color: color, fontFamily: 'Quicksand', fontWeight: fontWeight),
+      style: TextStyle(
+          color: color, fontFamily: 'Quicksand', fontWeight: fontWeight),
     );
   }
 
   Widget _buildInputField(String text,
-
       {String? Function(String?)? validatorForm,
-        isPassword = false,
+      isPassword = false,
       isEmail = false,
       isPhone = false,
       passwordNumber = 0}) {
     return FormBuilderTextField(
       name: text,
-      validator: validatorForm != null ? FormBuilderValidators.compose([validatorForm, FormBuilderValidators.required(errorText: "Campo obligatorio")]) : FormBuilderValidators.compose([FormBuilderValidators.required(errorText: "Campo obligatorio")]),
+      validator: validatorForm != null
+          ? FormBuilderValidators.compose([
+              validatorForm,
+              FormBuilderValidators.required(errorText: "Campo obligatorio")
+            ])
+          : FormBuilderValidators.compose(
+              [FormBuilderValidators.required(errorText: "Campo obligatorio")]),
       decoration: InputDecoration(
         suffixIcon: isPassword
             ? IconButton(
@@ -163,12 +176,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return ElevatedButton(
         onPressed: () {
           debugPrint(_fbKey.currentState?.value.toString());
-          if( _fbKey.currentState?.saveAndValidate() ?? false){
+          if (_fbKey.currentState?.saveAndValidate() ?? false) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
             );
-
           }
         },
         style: ElevatedButton.styleFrom(
@@ -203,7 +215,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
-            child: _buildTextWithColorAndBold("aquí", color: const Color.fromARGB(255, 31, 172, 90), fontWeight: FontWeight.bold))
+            child: _buildTextWithColorAndBold("aquí",
+                color: const Color.fromARGB(255, 31, 172, 90),
+                fontWeight: FontWeight.bold))
       ],
     );
   }
