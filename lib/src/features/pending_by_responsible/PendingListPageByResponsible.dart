@@ -2,13 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
-import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/detail_report_pending.dart';
-import 'package:g5_mb_campus_cleaner/src/login/login_page.dart';
+import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 
 class PendingListResponsiblePage extends StatefulWidget {
   const PendingListResponsiblePage({super.key});
@@ -217,55 +215,57 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: Drawer(
-    child: ListView(
-    padding: EdgeInsets.zero,
-      children: <Widget>[
-        const UserAccountsDrawerHeader(
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, 31, 172, 90),
-              ),
-          accountName: Text(
-            "Usuario XYZ",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          accountEmail: Text(
-            "marco.mezaCancho@unmsm.edu.pe",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          currentAccountPicture: CircleAvatar(
-            radius: 60.0,
-            backgroundImage: NetworkImage(
-                "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
-          ), //For Image Asset
-        ),
-        ExpansionTile(
-          leading: const Icon(Icons.flag),
-          title: const Text("Incidencias"),
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: <Widget>[
-            ListTile(
-              leading: const Icon(Icons.receipt_long),
-              title: const Text('Historial de Incidencias'),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const PendingListResponsiblePage(),
-                ),
+            const UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 31, 172, 90),
               ),
+              accountName: Text(
+                "Usuario XYZ",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              accountEmail: Text(
+                "marco.mezaCancho@unmsm.edu.pe",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              currentAccountPicture: CircleAvatar(
+                radius: 60.0,
+                backgroundImage: NetworkImage(
+                    "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
+              ), //For Image Asset
             ),
+            ExpansionTile(
+              leading: const Icon(Icons.flag),
+              title: const Text("Incidencias"),
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.receipt_long),
+                  title: const Text('Historial de Incidencias'),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PendingListResponsiblePage(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ListTile(
+              leading: const Icon(Icons.power_settings_new),
+              title: const Text('Cerrar sesión'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            )
           ],
         ),
-        ListTile(
-          leading: const Icon(Icons.power_settings_new),
-          title: const Text('Cerrar sesión'),
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()),
-            );
-          },
-        )
-      ],
-    ),
-    ),
+      ),
       bottomNavigationBar: CampusNavigationBar.buildNavCleaner(context),
       body: Container(
         decoration: const BoxDecoration(
@@ -302,8 +302,6 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
     );
   }
 
-
-
   Widget _buildList() {
     return SizedBox(
         width: mediaSize.width,
@@ -333,7 +331,6 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Quicksand'),
                         ),
-
                       ],
                     )),
                 const SizedBox(
@@ -345,7 +342,6 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
                 const SizedBox(
                   height: 10,
                 ),
-
               ],
             ),
           ),
@@ -373,17 +369,16 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
                       ..onTap = () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => DetailReportPendingPage()),
+                          MaterialPageRoute(
+                              builder: (context) => DetailReportPendingPage()),
                         );
-                        },
+                      },
                   )
                 ],
               ),
             ),
           ),
-          Text(
-              this.lista[index].dateReport!
-          ),
+          Text(this.lista[index].dateReport!),
         ],
       ),
     );
@@ -397,6 +392,4 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
           return _buildPendingElement(position);
         });
   }
-
-
 }

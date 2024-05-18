@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
 import 'package:g5_mb_campus_cleaner/src/features/news_admin/NewsAdminPage.dart';
 import 'package:g5_mb_campus_cleaner/src/features/news_page/NewsPage.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_list/PendingListPage.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
 import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
 
 class CampusNavigationBar {
