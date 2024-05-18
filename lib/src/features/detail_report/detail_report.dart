@@ -1,9 +1,5 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 
@@ -243,7 +239,7 @@ class _DetailReportPage extends State<DetailReportPage> {
 
   Widget _builtDetailInfo() {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
         child: Column(
           children: [
             Row(
@@ -254,22 +250,22 @@ class _DetailReportPage extends State<DetailReportPage> {
                   child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Ubicacion"),
+                        Text("Ubicación"),
                         Text(
                           "data",
                           style: TextStyle(),
                         )
                       ]),
                 ),
-                Container(
-                  child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text("Referencia"), Text("data")]),
-                ),
+                const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text("Referencia"), Text("data")]),
               ],
             ),
-            SizedBox(height: 20,),
-            Row(
+            const SizedBox(
+              height: 20,
+            ),
+            const Row(
               children: [Text("Comentario")],
             )
           ],
@@ -281,7 +277,7 @@ class _DetailReportPage extends State<DetailReportPage> {
         height: 50,
         width: mediaSize.width,
         child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 100),
+            padding: const EdgeInsets.symmetric(horizontal: 100),
             child: ElevatedButton(
                 onPressed:
                     lista.where((element) => element.selected == true).isEmpty
@@ -307,7 +303,7 @@ class _DetailReportPage extends State<DetailReportPage> {
         width: mediaSize.width,
         height: 700,
         child: Padding(
-          padding: EdgeInsets.all(1.0),
+          padding: const EdgeInsets.all(1.0),
           child: Card(
             color: Colors.white,
             shape: const RoundedRectangleBorder(
@@ -362,32 +358,31 @@ class _DetailReportPage extends State<DetailReportPage> {
   }
 
   Widget _imageReport() {
-    return Container(
+    return SizedBox(
       height: 380,
-      child: Container(
-        child: Column(
-          children: [
-            const Column(children: [Text("Foto"), Text("10:00 am")]),
-            Container(
-              padding: EdgeInsetsDirectional.symmetric(vertical: 10),
-              decoration: DottedDecoration(
-                  shape: Shape.line,
-                  linePosition: LinePosition.bottom,
-                  color: Colors.black),
-              child: Card(
-                  margin: EdgeInsets.symmetric(horizontal: 30, vertical: 0),
-                  child: Container(
-                    height: 300,
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1.5),
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        image: DecorationImage(
-                            image: AssetImage("assets/images/garbage.png"),
-                            fit: BoxFit.fitWidth)),
-                  )),
-            )
-          ],
-        ),
+      child: Column(
+        children: [
+          const Column(children: [Text("Foto"), Text("10:00 am")]),
+          Container(
+            padding: const EdgeInsetsDirectional.symmetric(vertical: 10),
+            decoration: DottedDecoration(
+                shape: Shape.line,
+                linePosition: LinePosition.bottom,
+                color: Colors.black),
+            child: Card(
+                margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
+                child: Container(
+                  height: 300,
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1.5),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(8.0)),
+                      image: const DecorationImage(
+                          image: AssetImage("assets/images/garbage.png"),
+                          fit: BoxFit.fitWidth)),
+                )),
+          )
+        ],
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
 import 'package:g5_mb_campus_cleaner/src/features/news_admin/NewsAdminPage.dart';
@@ -6,7 +5,7 @@ import 'package:g5_mb_campus_cleaner/src/features/news_page/NewsPage.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_list/PendingListPage.dart';
 import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
 
-class CampusNavigationBar  {
+class CampusNavigationBar {
   static BottomNavigationBar buildNav(BuildContext context) {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
@@ -22,11 +21,12 @@ class CampusNavigationBar  {
       onTap: (int index) {
         switch (index) {
           case 0:
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>  PendingListPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PendingListPage()));
           case 1:
-            Navigator.push(context, MaterialPageRoute(builder: (context) => NewsAdminPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => NewsAdminPage()));
         }
-
       },
     );
   }
@@ -46,11 +46,12 @@ class CampusNavigationBar  {
       onTap: (int index) {
         switch (index) {
           case 0:
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>  PendingListUserPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PendingListUserPage()));
           case 1:
-            Navigator.push(context, MaterialPageRoute(builder: (context) => NewsPage()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => NewsPage()));
         }
-
       },
     );
   }

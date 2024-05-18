@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/src/login/login_page.dart';
+import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 
 void main() {
   runApp(const MyApp());

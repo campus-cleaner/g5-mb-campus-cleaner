@@ -6,7 +6,6 @@ import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
-import 'package:g5_mb_campus_cleaner/src/login/login_page.dart';
 
 class PendingListPage extends StatefulWidget {
   const PendingListPage({super.key});
@@ -15,7 +14,7 @@ class PendingListPage extends StatefulWidget {
 }
 
 class _PendingListPage extends State<PendingListPage> {
-  final _fbKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
   List<CleanerPersonal> dummyData = [
@@ -203,6 +202,7 @@ class _PendingListPage extends State<PendingListPage> {
   ];
   @override
   Widget build(BuildContext context) {
+    _fbKey.currentState?.fields['responsible']!.setValue(dummyData[0].id);
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -214,57 +214,6 @@ class _PendingListPage extends State<PendingListPage> {
         backgroundColor: const Color.fromARGB(255, 31, 172, 90),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 31, 172, 90),
-              ),
-              accountName: Text(
-                "Usuario XYZ",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              accountEmail: Text(
-                "marco.mezaCancho@unmsm.edu.pe",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              currentAccountPicture: CircleAvatar(
-                radius: 60.0,
-                backgroundImage: NetworkImage(
-                    "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
-              ), //For Image Asset
-            ),
-            ExpansionTile(
-              leading: const Icon(Icons.flag),
-              title: const Text("Incidencias"),
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.receipt_long),
-                  title: const Text('Historial de Incidencias'),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const PendingListPage(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            ListTile(
-              leading: const Icon(Icons.power_settings_new),
-              title: const Text('Cerrar sesión'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-              },
-            )
-          ],
-        ),
-      ),
-
       bottomNavigationBar: CampusNavigationBar.buildNav(context),
       body: Container(
         decoration: const BoxDecoration(
@@ -306,7 +255,7 @@ class _PendingListPage extends State<PendingListPage> {
         height: 50,
         width: mediaSize.width,
         child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 100),
+            padding: const EdgeInsets.symmetric(horizontal: 100),
             child: ElevatedButton(
                 onPressed:
                     lista.where((element) => element.selected == true).isEmpty
@@ -333,7 +282,7 @@ class _PendingListPage extends State<PendingListPage> {
         width: mediaSize.width,
         height: 700,
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Card(
             color: Colors.white,
             shape: const RoundedRectangleBorder(
@@ -346,7 +295,8 @@ class _PendingListPage extends State<PendingListPage> {
             child: Column(
               children: [
                 Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -422,9 +372,10 @@ class _PendingListPage extends State<PendingListPage> {
                       ..onTap = () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => DetailReportPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const DetailReportPage()),
                         );
-                        },
+                      },
                   )
                 ],
               ),
@@ -453,7 +404,7 @@ class _PendingListPage extends State<PendingListPage> {
         });
   }
 
-  _openBox()  {
+  Future<void> _openBox() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -461,16 +412,17 @@ class _PendingListPage extends State<PendingListPage> {
             child: AlertDialog(
                 scrollable: true,
                 backgroundColor: Colors.white,
-                title: Text(
+                title: const Text(
                   'Asignar',
                   textAlign: TextAlign.center,
                 ),
                 content: FormBuilder(
                   key: _fbKey,
+                  autovalidateMode: AutovalidateMode.disabled,
+                  skipDisabled: true,
                   onChanged: () {
                     _fbKey.currentState!.save();
                   },
-                  autovalidateMode: AutovalidateMode.disabled, // this to show error when user is in some textField
                   child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Form(
@@ -480,38 +432,33 @@ class _PendingListPage extends State<PendingListPage> {
                               children: [
                             FormBuilderDropdown(
                                 name: "responsible",
-
                                 focusColor: Colors.white,
-                                validator: FormBuilderValidators.required(),
+                                validator: FormBuilderValidators.compose([
+                                  FormBuilderValidators.required()
+                                ]), //elevation: 5,
                                 decoration: const InputDecoration(
-                                    hintText: "Seleccionar Responsable",
-                                    hintMaxLines: 1,
+                                  hintText: "Seleccionar Responsable",
+                                  hintMaxLines: 1,
                                   errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color:  Color(0xFFFF4240)),
+                                    borderSide:
+                                        BorderSide(color: Color(0xFFFF4240)),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color:  Color(0xFFFF4240)),
-                                  ),),
+                                    borderSide:
+                                        BorderSide(color: Color(0xFFFF4240)),
+                                  ),
+                                ),
                                 items: dummyData
                                     .map((data) => DropdownMenuItem(
                                         value: data.id,
                                         child: Text(data.label)))
                                     .toList()),
-                            SizedBox(height: 20,),
+                            const SizedBox(
+                              height: 20,
+                            ),
                             ElevatedButton(
-                              child: Text("Asignar"),
-                              onPressed: () {
-                                debugPrint('validation correct ${_fbKey.currentState}');
-
-                                if (_fbKey.currentState?.validate() ?? false) {
-                                  final edificio =
-                                      _fbKey.currentState?.fields['responsible']!.value;
-                                  debugPrint('validation correct ${edificio}');
-                                } else {
-                                  debugPrint('validation failed');
-                                }
-
-                              },
+                              child: const Text("Asignar"),
+                              onPressed: () {},
                             ),
                           ]))),
                 )));
