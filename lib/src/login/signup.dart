@@ -50,6 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         children: [
           Text(
             "REGISTRARSE",
+            "REGISTRARSE",
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -124,8 +125,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildTextWithColorAndBold(String text,
       {Color color = Colors.black, FontWeight fontWeight = FontWeight.normal}) {
+  Widget _buildTextWithColorAndBold(String text,
+      {Color color = Colors.black, FontWeight fontWeight = FontWeight.normal}) {
     return Text(
       text,
+      style: TextStyle(
+          color: color, fontFamily: 'Quicksand', fontWeight: fontWeight),
       style: TextStyle(
           color: color, fontFamily: 'Quicksand', fontWeight: fontWeight),
     );
@@ -215,6 +220,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
+            child: _buildTextWithColorAndBold("aquí",
+                color: const Color.fromARGB(255, 31, 172, 90),
+                fontWeight: FontWeight.bold))
             child: _buildTextWithColorAndBold("aquí",
                 color: const Color.fromARGB(255, 31, 172, 90),
                 fontWeight: FontWeight.bold))
