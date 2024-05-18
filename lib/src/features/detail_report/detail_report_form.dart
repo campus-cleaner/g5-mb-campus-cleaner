@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report_pre_confirm.dart';
+import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/user_campus_app_navigation_bar.dart';
+import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
+import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 
 class ImageButton extends StatelessWidget {
   final String imagePath;
@@ -39,22 +42,80 @@ class _DetailReportFormState extends State<DetailReportForm> {
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
-
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-        image: DecorationImage(
-            image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        bottomNavigationBar: UserCampusNavigationBar.buildNav(context),
-        body: Center(
-            child: Stack(children: [
-          _buildBottom(),
-        ])),
-      ),
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Registro',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          backgroundColor: const Color.fromARGB(255, 31, 172, 90),
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              const UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 31, 172, 90),
+                ),
+                accountName: Text(
+                  "Usuario XYZ",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                accountEmail: Text(
+                  "marco.mezaCancho@unmsm.edu.pe",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                currentAccountPicture: CircleAvatar(
+                  radius: 60.0,
+                  backgroundImage: NetworkImage(
+                      "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
+                ), //For Image Asset
+              ),
+              ExpansionTile(
+                leading: const Icon(Icons.flag),
+                title: const Text("Incidencias"),
+                children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.receipt_long),
+                    title: const Text('Historial de Incidencias'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PendingListUserPage(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              ListTile(
+                leading: const Icon(Icons.power_settings_new),
+                title: const Text('Cerrar sesión'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+        bottomNavigationBar: CampusNavigationBar.buildNavUser(context),
+        body: Container(
+          decoration: const BoxDecoration(
+            color: Colors.transparent,
+            image: DecorationImage(
+                image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
+          ),
+          child: Stack(
+            children: [
+              _buildBottom(),
+            ],
+          ),
+        ));
   }
 
   Widget _buildBottom() {

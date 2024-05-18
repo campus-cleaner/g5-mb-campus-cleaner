@@ -6,6 +6,7 @@ import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
+import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 
 class PendingListPage extends StatefulWidget {
   const PendingListPage({super.key});
@@ -213,6 +214,58 @@ class _PendingListPage extends State<PendingListPage> {
         ),
         backgroundColor: const Color.fromARGB(255, 31, 172, 90),
         iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 31, 172, 90),
+              ),
+              accountName: Text(
+                "Usuario XYZ",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              accountEmail: Text(
+                "marco.mezaCancho@unmsm.edu.pe",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              currentAccountPicture: CircleAvatar(
+                radius: 60.0,
+                backgroundImage: NetworkImage(
+                    "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
+              ), //For Image Asset
+            ),
+            ExpansionTile(
+              leading: const Icon(Icons.flag),
+              title: const Text("Incidencias"),
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.receipt_long),
+                  title: const Text('Historial de Incidencias'),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PendingListPage(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ListTile(
+              leading: const Icon(Icons.power_settings_new),
+              title: const Text('Cerrar sesión'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            )
+          ],
+        ),
       ),
       bottomNavigationBar: CampusNavigationBar.buildNav(context),
       body: Container(

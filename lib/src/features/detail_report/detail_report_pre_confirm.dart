@@ -1,5 +1,6 @@
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
+import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/user_campus_app_navigation_bar.dart';
 
 class DetailReportPreConfirmPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _DetailReportPreConfirmPage extends State<DetailReportPreConfirmPage> {
         backgroundColor: const Color.fromARGB(255, 31, 172, 90),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      bottomNavigationBar: UserCampusNavigationBar.buildNav(context),
+      bottomNavigationBar: CampusNavigationBar.buildNavUser(context),
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,

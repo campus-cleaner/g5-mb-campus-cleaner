@@ -268,7 +268,7 @@ class _PendingListPage extends State<PendingListUserPage> {
           ],
         ),
       ),
-      bottomNavigationBar: CampusNavigationBar.buildNavCleaner(context),
+      bottomNavigationBar: CampusNavigationBar.buildNavUser(context),
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,

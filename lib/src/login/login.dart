@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report_form.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
 import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
 import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
 import 'package:g5_mb_campus_cleaner/src/login/welcome_view.dart';
@@ -200,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                 'admin@unmsm.edu.pe') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PendingListUserPage()),
+                MaterialPageRoute(builder: (context) => PendingListPage()),
               );
             } else if (_fbKey.currentState?.fields["email"]?.value ==
                 'cleaner@unmsm.edu.pe') {
