@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_list/PendingListPage.dart';
 import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
 
 class LoginPage extends StatefulWidget {
@@ -179,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
           debugPrint("Password : ${passwordController.text}");
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => DashboardPage()),
+            MaterialPageRoute(builder: (context) => PendingListPage()),
           );
         },
         style: ElevatedButton.styleFrom(

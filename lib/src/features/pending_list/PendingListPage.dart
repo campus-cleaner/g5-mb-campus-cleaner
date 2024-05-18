@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
+import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 
 class PendingListPage extends StatefulWidget {
@@ -369,8 +370,11 @@ class _PendingListPage extends State<PendingListPage> {
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        debugPrint('Label has been tapped. $index');
-                      },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => DetailReportPage()),
+                        );
+                        },
                   )
                 ],
               ),
@@ -433,7 +437,13 @@ class _PendingListPage extends State<PendingListPage> {
                                 ]), //elevation: 5,
                                 decoration: InputDecoration(
                                     hintText: "Seleccionar Responsable",
-                                    hintMaxLines: 1),
+                                    hintMaxLines: 1,
+                                  errorBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(color:  Color(0xFFFF4240)),
+                                  ),
+                                  focusedErrorBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(color:  Color(0xFFFF4240)),
+                                  ),),
                                 items: dummyData
                                     .map((data) => DropdownMenuItem(
                                         value: data.id,
