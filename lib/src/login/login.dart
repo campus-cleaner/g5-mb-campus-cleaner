@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report_form.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
 import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,6 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
   TextEditingController emailController = TextEditingController();
@@ -25,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: const BoxDecoration(
         color: Colors.transparent,
         image: DecorationImage(
-            image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
+            image: AssetImage("assets/images/bg.png"), fit: BoxFit.cover),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -81,27 +85,31 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildBlackAndBoldText("Correo"),
-        _buildInputField(emailController, isEmail: true),
-        const SizedBox(height: 40),
-        _buildBlackAndBoldText("Contraseña"),
-        _buildInputField(passwordController, isPassword: true),
-        const SizedBox(height: 20),
-        _buildLoginButton(),
-        const SizedBox(height: 20),
-        _buildOtherLogin(),
-      ],
-    );
+    return FormBuilder(
+        key: _fbKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildBlackAndBoldText("Correo"),
+            _buildInputField("email",
+                validatorForm:
+                    FormBuilderValidators.email(errorText: "Correo inválido"),
+                isEmail: true),
+            const SizedBox(height: 40),
+            _buildBlackAndBoldText("Contraseña"),
+            _buildInputField("password", isPassword: true),
+            const SizedBox(height: 20),
+            _buildLoginButton(),
+            const SizedBox(height: 20),
+            _buildOtherLogin(),
+          ],
+        ));
   }
 
   Widget _buildBlackText(String text) {
     return Text(
       text,
-      style: const TextStyle(
-          color: Colors.black, fontFamily: 'Quicksand', fontSize: 14),
+      style: const TextStyle(color: Colors.black, fontFamily: 'Quicksand'),
     );
   }
 
@@ -125,10 +133,20 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildInputField(TextEditingController controller,
-      {isPassword = false, isEmail = false, isPhone = false}) {
-    return TextField(
-      controller: controller,
+  Widget _buildInputField(String text,
+      {String? Function(String?)? validatorForm,
+      isPassword = false,
+      isEmail = false,
+      isPhone = false}) {
+    return FormBuilderTextField(
+      name: text,
+      validator: validatorForm != null
+          ? FormBuilderValidators.compose([
+              validatorForm,
+              FormBuilderValidators.required(errorText: "Campo obligatorio")
+            ])
+          : FormBuilderValidators.compose(
+              [FormBuilderValidators.required(errorText: "Campo obligatorio")]),
       decoration: InputDecoration(
         suffixIcon: isPassword
             ? IconButton(
@@ -149,15 +167,53 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget _buildRememberForgot() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Checkbox(
+                value: rememberUser,
+                onChanged: (value) {
+                  setState(() {
+                    rememberUser = value!;
+                  });
+                }),
+            _buildBlackText("Mantener abierto"),
+          ],
+        ),
+        TextButton(
+            onPressed: () {}, child: _buildBlackText("¿Olvidó su contraseña?"))
+      ],
+    );
+  }
+
   Widget _buildLoginButton() {
     return ElevatedButton(
         onPressed: () {
-          debugPrint("Email : ${emailController.text}");
-          debugPrint("Password : ${passwordController.text}");
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const DetailReportForm()),
-          );
+          debugPrint(_fbKey.currentState?.value.toString());
+          if (_fbKey.currentState?.saveAndValidate() ?? false) {
+            if (_fbKey.currentState?.fields["email"]?.value ==
+                'admin@unmsm.edu.pe') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PendingListUserPage()),
+              );
+            } else if (_fbKey.currentState?.fields["email"]?.value ==
+                'cleaner@unmsm.edu.pe') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PendingListResponsiblePage()),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PendingListUserPage()),
+              );
+            }
+          }
         },
         style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(),
@@ -166,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
           minimumSize: const Size.fromHeight(60),
         ),
         child: const Text(
-          "INICIAR",
+          "Iniciar",
           style: TextStyle(color: Colors.white),
         ));
   }
@@ -174,7 +230,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildOtherLogin() {
     return Center(
       child: Column(
-        children: [_signup()],
+        children: [
+          _signup(),
+          const SizedBox(height: 10),
+        ],
       ),
     );
   }
