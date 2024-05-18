@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report_form.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
 import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
 import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
+import 'package:g5_mb_campus_cleaner/src/login/welcome_view.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -210,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
             } else {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PendingListUserPage()),
+                MaterialPageRoute(builder: (context) => WelcomeView()),
               );
             }
           }
