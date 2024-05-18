@@ -13,13 +13,13 @@ import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/Pending
 import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/detail_report_pending.dart';
 import 'package:g5_mb_campus_cleaner/src/login/login_page.dart';
 
-class NewsAdminPage extends StatefulWidget {
-  const NewsAdminPage({super.key});
+class NewsPage extends StatefulWidget {
+  const NewsPage({super.key});
   @override
-  State<NewsAdminPage> createState() => _NewsAdminPage();
+  State<NewsPage> createState() => _NewsPage();
 }
 
-class _NewsAdminPage extends State<NewsAdminPage> {
+class _NewsPage extends State<NewsPage> {
   final _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
@@ -94,7 +94,7 @@ class _NewsAdminPage extends State<NewsAdminPage> {
           ],
         ),
       ),
-      bottomNavigationBar: CampusNavigationBar.buildNav(context),
+      bottomNavigationBar: CampusNavigationBar.buildNavCleaner(context),
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
@@ -145,12 +145,6 @@ class _NewsAdminPage extends State<NewsAdminPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(),
-                IconButton(
-                  onPressed: () {
-                    _openBox();
-                  },
-                  icon: Icon(Icons.more_vert),
-                ),
               ],
             ),
           ],

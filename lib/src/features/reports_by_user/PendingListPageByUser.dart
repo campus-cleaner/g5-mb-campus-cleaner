@@ -217,56 +217,58 @@ class _PendingListPage extends State<PendingListUserPage> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: Drawer(
-    child: ListView(
-    padding: EdgeInsets.zero,
-      children: <Widget>[
-        const UserAccountsDrawerHeader(
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, 31, 172, 90),
-              ),
-          accountName: Text(
-            "Usuario XYZ",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          accountEmail: Text(
-            "marco.mezaCancho@unmsm.edu.pe",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          currentAccountPicture: CircleAvatar(
-            radius: 60.0,
-            backgroundImage: NetworkImage(
-                "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
-          ), //For Image Asset
-        ),
-        ExpansionTile(
-          leading: const Icon(Icons.flag),
-          title: const Text("Incidencias"),
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: <Widget>[
-            ListTile(
-              leading: const Icon(Icons.receipt_long),
-              title: const Text('Historial de Incidencias'),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const PendingListUserPage(),
-                ),
+            const UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 31, 172, 90),
               ),
+              accountName: Text(
+                "Usuario XYZ",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              accountEmail: Text(
+                "marco.mezaCancho@unmsm.edu.pe",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              currentAccountPicture: CircleAvatar(
+                radius: 60.0,
+                backgroundImage: NetworkImage(
+                    "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
+              ), //For Image Asset
             ),
+            ExpansionTile(
+              leading: const Icon(Icons.flag),
+              title: const Text("Incidencias"),
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.receipt_long),
+                  title: const Text('Historial de Incidencias'),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PendingListUserPage(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ListTile(
+              leading: const Icon(Icons.power_settings_new),
+              title: const Text('Cerrar sesión'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            )
           ],
         ),
-        ListTile(
-          leading: const Icon(Icons.power_settings_new),
-          title: const Text('Cerrar sesión'),
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()),
-            );
-          },
-        )
-      ],
-    ),
-    ),
-      bottomNavigationBar: CampusNavigationBar.buildNav(context),
+      ),
+      bottomNavigationBar: CampusNavigationBar.buildNavCleaner(context),
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
@@ -302,8 +304,6 @@ class _PendingListPage extends State<PendingListUserPage> {
     );
   }
 
-
-
   Widget _buildList() {
     return SizedBox(
         width: mediaSize.width,
@@ -333,7 +333,6 @@ class _PendingListPage extends State<PendingListUserPage> {
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Quicksand'),
                         ),
-
                       ],
                     )),
                 const SizedBox(
@@ -345,7 +344,6 @@ class _PendingListPage extends State<PendingListUserPage> {
                 const SizedBox(
                   height: 10,
                 ),
-
               ],
             ),
           ),
@@ -373,17 +371,16 @@ class _PendingListPage extends State<PendingListUserPage> {
                       ..onTap = () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => DetailReportPendingPage()),
+                          MaterialPageRoute(
+                              builder: (context) => DetailReportPendingPage()),
                         );
-                        },
+                      },
                   )
                 ],
               ),
             ),
           ),
-          Text(
-              this.lista[index].status!
-          ),
+          Text(this.lista[index].status!),
         ],
       ),
     );
@@ -397,6 +394,4 @@ class _PendingListPage extends State<PendingListUserPage> {
           return _buildPendingElement(position);
         });
   }
-
-
 }

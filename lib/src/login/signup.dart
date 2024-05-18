@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
 import 'package:g5_mb_campus_cleaner/src/login/login_page.dart';
 
@@ -19,6 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool rememberUser = false;
   bool viewFirstPassword = false;
   bool viewSecondPassword = false;
+  final _fbKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
@@ -84,31 +87,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _buildForm() {
-    return Column(
+    return FormBuilder(
+        key: _fbKey,
+        child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildTextWithColorAndBold("Nombre", fontWeight: FontWeight.bold),
-        _buildInputField(nameController),
+        _buildInputField("name"),
         const SizedBox(height: 40),
         _buildTextWithColorAndBold("Correo", fontWeight: FontWeight.bold),
-        _buildInputField(emailController, isEmail: true),
+        _buildInputField("email", validatorForm: FormBuilderValidators.email(errorText: "Email inválido"), isEmail: true),
         const SizedBox(height: 40),
         _buildTextWithColorAndBold("Celular", fontWeight: FontWeight.bold),
-        _buildInputField(cellphoneController, isPhone: true),
+        _buildInputField("cellphone",validatorForm: FormBuilderValidators.numeric(errorText: "Debe ser un número válido"), isPhone: true),
         const SizedBox(height: 40),
         _buildTextWithColorAndBold("Contraseña", fontWeight: FontWeight.bold),
-        _buildInputField(passwordController,
+        _buildInputField("password",
             isPassword: true, passwordNumber: 1),
         const SizedBox(height: 40),
         _buildTextWithColorAndBold("Confirmar Contraseña", fontWeight: FontWeight.bold),
-        _buildInputField(secondPasswordController,
+        _buildInputField("secondPassword",
             isPassword: true, passwordNumber: 2),
         const SizedBox(height: 20),
         _buildLoginButton(),
         const SizedBox(height: 20),
         _buildOtherLogin(),
       ],
-    );
+    )) ;
   }
 
   Widget _buildTextWithColorAndBold(String text, { Color color = Colors.black , FontWeight fontWeight = FontWeight.normal}) {
@@ -118,13 +123,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildInputField(TextEditingController controller,
-      {isPassword = false,
+  Widget _buildInputField(String text,
+
+      {String? Function(String?)? validatorForm,
+        isPassword = false,
       isEmail = false,
       isPhone = false,
       passwordNumber = 0}) {
-    return TextField(
-      controller: controller,
+    return FormBuilderTextField(
+      name: text,
+      validator: validatorForm != null ? FormBuilderValidators.compose([validatorForm, FormBuilderValidators.required(errorText: "Campo obligatorio")]) : FormBuilderValidators.compose([FormBuilderValidators.required(errorText: "Campo obligatorio")]),
       decoration: InputDecoration(
         suffixIcon: isPassword
             ? IconButton(
@@ -154,11 +162,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildLoginButton() {
     return ElevatedButton(
         onPressed: () {
-          debugPrint("Nombre : ${nameController.text}");
-          debugPrint("Correo : ${emailController.text}");
-          debugPrint("Celular : ${cellphoneController.text}");
-          debugPrint("Contraseña : ${passwordController.text}");
-          debugPrint("Confirmar contraseña : ${secondPasswordController.text}");
+          debugPrint(_fbKey.currentState?.value.toString());
+          if( _fbKey.currentState?.saveAndValidate() ?? false){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+
+          }
         },
         style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(),
