@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
 
-class CampusNavigationBar  {
+class CampusNavigationBar {
   static BottomNavigationBar buildNav(BuildContext context) {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
@@ -18,10 +17,10 @@ class CampusNavigationBar  {
       onTap: (int index) {
         switch (index) {
           case 0:
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>  DashboardPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const DashboardPage()));
           case 1:
         }
-
       },
     );
   }

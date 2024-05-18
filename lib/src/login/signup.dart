@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
-import 'package:g5_mb_campus_cleaner/src/login/login_page.dart';
+import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -47,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Registrarse",
+            "REGISTRARSE",
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -100,7 +99,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _buildInputField(passwordController,
             isPassword: true, passwordNumber: 1),
         const SizedBox(height: 40),
-        _buildTextWithColorAndBold("Confirmar Contraseña", fontWeight: FontWeight.bold),
+        _buildTextWithColorAndBold("Confirmar Contraseña",
+            fontWeight: FontWeight.bold),
         _buildInputField(secondPasswordController,
             isPassword: true, passwordNumber: 2),
         const SizedBox(height: 20),
@@ -111,10 +111,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildTextWithColorAndBold(String text, { Color color = Colors.black , FontWeight fontWeight = FontWeight.normal}) {
+  Widget _buildTextWithColorAndBold(String text,
+      {Color color = Colors.black, FontWeight fontWeight = FontWeight.normal}) {
     return Text(
       text,
-      style: TextStyle(color: color, fontFamily: 'Quicksand', fontWeight: fontWeight),
+      style: TextStyle(
+          color: color, fontFamily: 'Quicksand', fontWeight: fontWeight),
     );
   }
 
@@ -192,7 +194,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
-            child: _buildTextWithColorAndBold("aquí", color: const Color.fromARGB(255, 31, 172, 90), fontWeight: FontWeight.bold))
+            child: _buildTextWithColorAndBold("aquí",
+                color: const Color.fromARGB(255, 31, 172, 90),
+                fontWeight: FontWeight.bold))
       ],
     );
   }

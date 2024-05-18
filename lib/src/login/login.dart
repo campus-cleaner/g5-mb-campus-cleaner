@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_list/PendingListPage.dart';
+import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report_form.dart';
 import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
 
 class LoginPage extends StatefulWidget {
@@ -26,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: const BoxDecoration(
         color: Colors.transparent,
         image: DecorationImage(
-            image: AssetImage("assets/images/bg.png"), fit: BoxFit.cover),
+            image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -91,8 +90,6 @@ class _LoginPageState extends State<LoginPage> {
         _buildBlackAndBoldText("Contraseña"),
         _buildInputField(passwordController, isPassword: true),
         const SizedBox(height: 20),
-        _buildRememberForgot(),
-        const SizedBox(height: 20),
         _buildLoginButton(),
         const SizedBox(height: 20),
         _buildOtherLogin(),
@@ -103,7 +100,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildBlackText(String text) {
     return Text(
       text,
-      style: const TextStyle(color: Colors.black, fontFamily: 'Quicksand'),
+      style: const TextStyle(
+          color: Colors.black, fontFamily: 'Quicksand', fontSize: 14),
     );
   }
 
@@ -151,28 +149,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildRememberForgot() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Checkbox(
-                value: rememberUser,
-                onChanged: (value) {
-                  setState(() {
-                    rememberUser = value!;
-                  });
-                }),
-            _buildBlackText("Mantener abierto"),
-          ],
-        ),
-        TextButton(
-            onPressed: () {}, child: _buildBlackText("¿Olvidó su contraseña?"))
-      ],
-    );
-  }
-
   Widget _buildLoginButton() {
     return ElevatedButton(
         onPressed: () {
@@ -180,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
           debugPrint("Password : ${passwordController.text}");
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PendingListPage()),
+            MaterialPageRoute(builder: (context) => const DetailReportForm()),
           );
         },
         style: ElevatedButton.styleFrom(
@@ -190,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
           minimumSize: const Size.fromHeight(60),
         ),
         child: const Text(
-          "Iniciar",
+          "INICIAR",
           style: TextStyle(color: Colors.white),
         ));
   }
@@ -198,17 +174,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildOtherLogin() {
     return Center(
       child: Column(
-        children: [
-          _signup(),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Tab(icon: Image.asset("assets/images/gmail.png")),
-              Tab(icon: Image.asset("assets/images/facebook.png"))
-            ],
-          )
-        ],
+        children: [_signup()],
       ),
     );
   }
