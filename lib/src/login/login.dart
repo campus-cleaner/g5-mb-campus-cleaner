@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/src/features/dashboard/dashboard.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_list/PendingListPage.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report_form.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
+import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
 import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
+import 'package:g5_mb_campus_cleaner/src/login/welcome_view.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,6 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
   TextEditingController emailController = TextEditingController();
@@ -82,22 +88,25 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildBlackAndBoldText("Correo"),
-        _buildInputField(emailController, isEmail: true),
-        const SizedBox(height: 40),
-        _buildBlackAndBoldText("Contraseña"),
-        _buildInputField(passwordController, isPassword: true),
-        const SizedBox(height: 20),
-        _buildRememberForgot(),
-        const SizedBox(height: 20),
-        _buildLoginButton(),
-        const SizedBox(height: 20),
-        _buildOtherLogin(),
-      ],
-    );
+    return FormBuilder(
+        key: _fbKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildBlackAndBoldText("Correo"),
+            _buildInputField("email",
+                validatorForm:
+                    FormBuilderValidators.email(errorText: "Correo inválido"),
+                isEmail: true),
+            const SizedBox(height: 40),
+            _buildBlackAndBoldText("Contraseña"),
+            _buildInputField("password", isPassword: true),
+            const SizedBox(height: 20),
+            _buildLoginButton(),
+            const SizedBox(height: 20),
+            _buildOtherLogin(),
+          ],
+        ));
   }
 
   Widget _buildBlackText(String text) {
@@ -127,10 +136,20 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildInputField(TextEditingController controller,
-      {isPassword = false, isEmail = false, isPhone = false}) {
-    return TextField(
-      controller: controller,
+  Widget _buildInputField(String text,
+      {String? Function(String?)? validatorForm,
+      isPassword = false,
+      isEmail = false,
+      isPhone = false}) {
+    return FormBuilderTextField(
+      name: text,
+      validator: validatorForm != null
+          ? FormBuilderValidators.compose([
+              validatorForm,
+              FormBuilderValidators.required(errorText: "Campo obligatorio")
+            ])
+          : FormBuilderValidators.compose(
+              [FormBuilderValidators.required(errorText: "Campo obligatorio")]),
       decoration: InputDecoration(
         suffixIcon: isPassword
             ? IconButton(
@@ -176,12 +195,28 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginButton() {
     return ElevatedButton(
         onPressed: () {
-          debugPrint("Email : ${emailController.text}");
-          debugPrint("Password : ${passwordController.text}");
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PendingListPage()),
-          );
+          debugPrint(_fbKey.currentState?.value.toString());
+          if (_fbKey.currentState?.saveAndValidate() ?? false) {
+            if (_fbKey.currentState?.fields["email"]?.value ==
+                'admin@unmsm.edu.pe') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PendingListPage()),
+              );
+            } else if (_fbKey.currentState?.fields["email"]?.value ==
+                'cleaner@unmsm.edu.pe') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PendingListResponsiblePage()),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WelcomeView()),
+              );
+            }
+          }
         },
         style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(),
@@ -201,13 +236,6 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           _signup(),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Tab(icon: Image.asset("assets/images/gmail.png")),
-              Tab(icon: Image.asset("assets/images/facebook.png"))
-            ],
-          )
         ],
       ),
     );

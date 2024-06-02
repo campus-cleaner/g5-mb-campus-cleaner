@@ -1,17 +1,32 @@
-import 'package:dotted_decoration/dotted_decoration.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
+import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/detail_report_pending.dart';
+import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 
-class DetailReportPage extends StatefulWidget {
-  const DetailReportPage({super.key});
+class PendingListUserPage extends StatefulWidget {
+  const PendingListUserPage({super.key});
   @override
-  State<DetailReportPage> createState() => _DetailReportPage();
+  State<PendingListUserPage> createState() => _PendingListPage();
 }
 
-class _DetailReportPage extends State<DetailReportPage> {
+class _PendingListPage extends State<PendingListUserPage> {
+  final _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
+  List<CleanerPersonal> dummyData = [
+    CleanerPersonal(id: 1, label: 'Alice'),
+    CleanerPersonal(id: 2, label: 'Bob'),
+    CleanerPersonal(id: 3, label: 'Charlie'),
+    CleanerPersonal(id: 4, label: 'David'),
+    CleanerPersonal(id: 5, label: 'Eve'),
+  ];
   List<PendingReport> lista = [
     PendingReport(
       location: 'Office A',
@@ -195,13 +210,65 @@ class _DetailReportPage extends State<DetailReportPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Detalle de Reporte',
+          'Reportes Pendientes',
           style: TextStyle(fontSize: 18, color: Colors.white),
         ),
         backgroundColor: const Color.fromARGB(255, 31, 172, 90),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      //bottomNavigationBar: CampusNavigationBar.buildNav(context),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 31, 172, 90),
+              ),
+              accountName: Text(
+                "Usuario XYZ",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              accountEmail: Text(
+                "marco.mezaCancho@unmsm.edu.pe",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              currentAccountPicture: CircleAvatar(
+                radius: 60.0,
+                backgroundImage: NetworkImage(
+                    "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
+              ), //For Image Asset
+            ),
+            ExpansionTile(
+              leading: const Icon(Icons.flag),
+              title: const Text("Incidencias"),
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.receipt_long),
+                  title: const Text('Historial de Incidencias'),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PendingListUserPage(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ListTile(
+              leading: const Icon(Icons.power_settings_new),
+              title: const Text('Cerrar sesión'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            )
+          ],
+        ),
+      ),
+      bottomNavigationBar: CampusNavigationBar.buildNavUser(context),
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
@@ -210,7 +277,7 @@ class _DetailReportPage extends State<DetailReportPage> {
         ),
         child: Stack(children: [
           Positioned(top: 30, child: _buildTop()),
-          Positioned(bottom: 20, child: _buildDetailReport()),
+          Positioned(bottom: 20, child: _buildList()),
         ]),
       ),
     );
@@ -224,7 +291,7 @@ class _DetailReportPage extends State<DetailReportPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Reporte",
+            "Pendientes",
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -237,73 +304,12 @@ class _DetailReportPage extends State<DetailReportPage> {
     );
   }
 
-  Widget _builtDetailInfo() {
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Ubicación"),
-                        Text(
-                          "data",
-                          style: TextStyle(),
-                        )
-                      ]),
-                ),
-                const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Text("Referencia"), Text("data")]),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Row(
-              children: [Text("Comentario")],
-            )
-          ],
-        ));
-  }
-
-  Widget _buildBottom() {
-    return SizedBox(
-        height: 50,
-        width: mediaSize.width,
-        child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 100),
-            child: ElevatedButton(
-                onPressed:
-                    lista.where((element) => element.selected == true).isEmpty
-                        ? null
-                        : () {
-                            debugPrint(
-                                "Enviando : ${lista.where((element) => element.selected == true)}");
-                          },
-                style: ElevatedButton.styleFrom(
-                  shape: const StadiumBorder(),
-                  elevation: 20,
-                  backgroundColor: const Color.fromARGB(255, 31, 172, 90),
-                  minimumSize: const Size.fromHeight(60),
-                ),
-                child: const Text(
-                  "Asignar",
-                  style: TextStyle(color: Colors.white),
-                ))));
-  }
-
-  Widget _buildDetailReport() {
+  Widget _buildList() {
     return SizedBox(
         width: mediaSize.width,
         height: 700,
         child: Padding(
-          padding: const EdgeInsets.all(1.0),
+          padding: EdgeInsets.all(16.0),
           child: Card(
             color: Colors.white,
             shape: const RoundedRectangleBorder(
@@ -316,74 +322,76 @@ class _DetailReportPage extends State<DetailReportPage> {
             child: Column(
               children: [
                 Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 30),
-                    decoration: DottedDecoration(
-                        shape: Shape.line,
-                        linePosition: LinePosition.bottom,
-                        color: Colors.black),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const CircleAvatar(
-                          backgroundImage:
-                              AssetImage("assets/images/github.png"),
+                        const Text(
+                          "Pendientes",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Quicksand'),
                         ),
-                        Container(
-                            width: 130,
-                            height: 40,
-                            margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                            child: const Column(
-                              children: [Text("Usuario"), Text("prueba")],
-                            ))
                       ],
                     )),
                 const SizedBox(
                   height: 10,
                 ),
-                _imageReport(),
-                _builtDetailInfo(),
+                Expanded(
+                  child: _buildPendings(),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
-                //_buildBottom(),
-                //const SizedBox(
-                 // height: 10,
-                //),
               ],
             ),
           ),
         ));
   }
 
-  Widget _imageReport() {
-    return SizedBox(
-      height: 380,
-      child: Column(
-        children: [
-          const Column(children: [Text("Foto"), Text("10:00 am")]),
-          Container(
-            padding: const EdgeInsetsDirectional.symmetric(vertical: 10),
-            decoration: DottedDecoration(
-                shape: Shape.line,
-                linePosition: LinePosition.bottom,
-                color: Colors.black),
-            child: Card(
-                margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
-                child: Container(
-                  height: 300,
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.5),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(8.0)),
-                      image: const DecorationImage(
-                          image: AssetImage("assets/images/garbage.png"),
-                          fit: BoxFit.fitWidth)),
-                )),
-          )
+  Widget _buildPendingElement(int index) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  const WidgetSpan(
+                    child: Icon(Icons.delete, size: 20),
+                  ),
+                  TextSpan(
+                    text: "Registro Pendiente ${index + 1}",
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailReportPendingPage()),
+                        );
+                      },
+                  )
+                ],
+              ),
+            ),
+          ),
+          Text(this.lista[index].status!),
         ],
       ),
     );
+  }
+
+  Widget _buildPendings() {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: lista.length,
+        itemBuilder: (context, position) {
+          return _buildPendingElement(position);
+        });
   }
 }
