@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:g5_mb_campus_cleaner/src/core/services/login_service.dart';
 import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report_form.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
 import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
 import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
 import 'package:g5_mb_campus_cleaner/src/login/welcome_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +19,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _fbKey = GlobalKey<FormBuilderState>();
+  final loginService = LoginService();
   late Color myColor;
   late Size mediaSize;
   TextEditingController emailController = TextEditingController();
@@ -194,17 +197,23 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-        onPressed: () {
-          debugPrint(_fbKey.currentState?.value.toString());
+        onPressed: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
           if (_fbKey.currentState?.saveAndValidate() ?? false) {
-            if (_fbKey.currentState?.fields["email"]?.value ==
-                'admin@unmsm.edu.pe') {
+            final user = _fbKey.currentState?.fields["email"]?.value;
+            final pass = _fbKey.currentState?.fields["password"]?.value;
+            var response = await loginService.login(
+                username: user, password: pass, tokenDevice: null);
+            if(response == null) {
+              return;
+            }
+            await prefs.setString('token', response.token);
+            if (response.rol == 'ADMIN') {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => PendingListPage()),
               );
-            } else if (_fbKey.currentState?.fields["email"]?.value ==
-                'cleaner@unmsm.edu.pe') {
+            } else if (response.rol == 'CLEANER') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
