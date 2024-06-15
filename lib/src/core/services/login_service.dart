@@ -44,7 +44,7 @@ class LoginService {
         required String? tokenDevice}) async {
     try{
       final response = await http.post(
-        Uri.parse('${Environment.apiUrl}/user/signIn'),
+        Uri.parse('${Environment.apiUrl}/user/signUp'),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode(<String, dynamic>{
           'username': username,

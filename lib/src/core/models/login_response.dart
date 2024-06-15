@@ -1,8 +1,8 @@
 class LoginResponse {
-  String code;
-  String message;
+  String? code;
+  String? message;
   String token;
-  String rol;
+  String? rol;
 
 
   LoginResponse(

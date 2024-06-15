@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
+import 'package:g5_mb_campus_cleaner/src/core/models/users_combo.dart';
+import 'package:g5_mb_campus_cleaner/src/core/services/reports_service.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/detail_report_pending.dart';
 import 'package:g5_mb_campus_cleaner/src/login/login.dart';
+import 'package:intl/intl.dart';
 
 class PendingListResponsiblePage extends StatefulWidget {
   const PendingListResponsiblePage({super.key});
@@ -18,189 +21,31 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
   final _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
-  List<CleanerPersonal> dummyData = [
-    CleanerPersonal(id: 1, label: 'Alice'),
-    CleanerPersonal(id: 2, label: 'Bob'),
-    CleanerPersonal(id: 3, label: 'Charlie'),
-    CleanerPersonal(id: 4, label: 'David'),
-    CleanerPersonal(id: 5, label: 'Eve'),
+
+  List<UserCombo> usuariosCleaners = [
   ];
   List<PendingReport> lista = [
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Warehouse B',
-      status: 'In Progress',
-      dateReport: '12/05/2024',
-      selected: true,
-    ),
-    PendingReport(
-      reference: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    )
   ];
+  @override
+  void initState() {
+    super.initState();
+    _getPendientes();
+    _getCleaners();
+  }
+  void _getPendientes() async {
+    final service = ReportService();
+    final response = await service.getReportsToAttend();
+    setState(() {
+      lista = response;
+    });
+  }
+  void _getCleaners() async {
+    final service = ReportService();
+    final response = await service.getCombo();
+    setState(() {
+      usuariosCleaners = response;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
@@ -361,7 +206,7 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
                     child: Icon(Icons.delete, size: 20),
                   ),
                   TextSpan(
-                    text: "Registro Pendiente ${index + 1}",
+                    text: "Registro Pendiente: ${this.lista[index].reference}",
                     style: const TextStyle(
                       color: Colors.black,
                     ),

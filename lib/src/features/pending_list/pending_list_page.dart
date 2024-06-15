@@ -4,6 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
+import 'package:g5_mb_campus_cleaner/src/core/models/users_combo.dart';
+import 'package:g5_mb_campus_cleaner/src/core/services/reports_service.dart';
 import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 import 'package:g5_mb_campus_cleaner/src/login/login.dart';
@@ -18,192 +20,35 @@ class _PendingListPage extends State<PendingListPage> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
-  List<CleanerPersonal> dummyData = [
-    CleanerPersonal(id: 1, label: 'Alice'),
-    CleanerPersonal(id: 2, label: 'Bob'),
-    CleanerPersonal(id: 3, label: 'Charlie'),
-    CleanerPersonal(id: 4, label: 'David'),
-    CleanerPersonal(id: 5, label: 'Eve'),
+  List<UserCombo> usuariosCleaners = [
   ];
   List<PendingReport> lista = [
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Warehouse B',
-      status: 'In Progress',
-      dateReport: '12/05/2024',
-      selected: true,
-    ),
-    PendingReport(
-      reference: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      reference: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    )
+
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _getPendientes();
+    _getCleaners();
+  }
+  void _getCleaners() async {
+    final service = ReportService();
+    final response = await service.getCombo();
+    setState(() {
+      usuariosCleaners = response;
+    });
+  }
+  void _getPendientes() async {
+    final service = ReportService();
+    final response = await service.getReportsToAssign();
+    setState(() {
+      lista = response;
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    _fbKey.currentState?.fields['responsible']!.setValue(dummyData[0].id);
+    _fbKey.currentState?.fields['responsible']!.setValue(usuariosCleaners[0].id);
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -501,10 +346,10 @@ class _PendingListPage extends State<PendingListPage> {
                                         BorderSide(color: Color(0xFFFF4240)),
                                   ),
                                 ),
-                                items: dummyData
+                                items: usuariosCleaners
                                     .map((data) => DropdownMenuItem(
                                         value: data.id,
-                                        child: Text(data.label)))
+                                        child: Text(data.label!)))
                                     .toList()),
                             const SizedBox(
                               height: 20,

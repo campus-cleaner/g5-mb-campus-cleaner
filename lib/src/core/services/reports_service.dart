@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:g5_mb_campus_cleaner/src/core/global/env.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/response.dart';
+import 'package:g5_mb_campus_cleaner/src/core/models/users_combo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,7 +48,28 @@ class ReportService{
     final decodedMap = json.decode(responseData);
     return Response.fromJson(decodedMap);
   }
+  Future<List<UserCombo>> getCombo() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final response = await http.get(
+          Uri.parse(
+              '${Environment.apiUrl}/report/getCleaners'),
+          headers: {'Authorization': 'Bearer ${prefs.getString('token')}'});
 
+      if (response.statusCode == 200) {
+        final decoded = await jsonDecode(utf8.decode(response.bodyBytes));
+        var list = <UserCombo>[];
+        for (var item in decoded) {
+          var notification = UserCombo.fromJson(item);
+          list.add(notification);
+        }
+        return list;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return [];
+  }
   Future<List<PendingReport>> getReportsToAttend() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();

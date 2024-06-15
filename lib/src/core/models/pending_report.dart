@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 class PendingReport {
   int? id;
@@ -18,7 +17,7 @@ class PendingReport {
 
   factory PendingReport.fromJson(Map<String, dynamic> json) => PendingReport(
         id: json['id'],
-        reference: json["location"],
+        reference: json["reference"],
         imageRoute: json["imageRoute"],
         latitude: json["latitude"],
         longitude: json["longitude"],
