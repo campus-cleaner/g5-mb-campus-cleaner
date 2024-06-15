@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -20,11 +22,8 @@ class _PendingListPage extends State<PendingListPage> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
-  List<UserCombo> usuariosCleaners = [
-  ];
-  List<PendingReport> lista = [
-
-  ];
+  List<UserCombo> usuariosCleaners = [];
+  List<PendingReport> lista = [];
 
   @override
   void initState() {
@@ -32,6 +31,7 @@ class _PendingListPage extends State<PendingListPage> {
     _getPendientes();
     _getCleaners();
   }
+
   void _getCleaners() async {
     final service = ReportService();
     final response = await service.getCombo();
@@ -39,6 +39,7 @@ class _PendingListPage extends State<PendingListPage> {
       usuariosCleaners = response;
     });
   }
+
   void _getPendientes() async {
     final service = ReportService();
     final response = await service.getReportsToAssign();
@@ -46,9 +47,16 @@ class _PendingListPage extends State<PendingListPage> {
       lista = response;
     });
   }
+
+  Future<void> _saveResponsible(String data) async {
+    final service = ReportService();
+    final response = await service.assignResponsible(data);
+  }
+
   @override
   Widget build(BuildContext context) {
-    _fbKey.currentState?.fields['responsible']!.setValue(usuariosCleaners[0].id);
+    _fbKey.currentState?.fields['responsible']!
+        .setValue(usuariosCleaners[0].id);
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -70,13 +78,13 @@ class _PendingListPage extends State<PendingListPage> {
               ),
               accountName: Text(
                 "Usuario XYZ",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
               accountEmail: Text(
                 "marco.mezaCancho@unmsm.edu.pe",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
               currentAccountPicture: CircleAvatar(
                 radius: 60.0,
@@ -316,11 +324,6 @@ class _PendingListPage extends State<PendingListPage> {
                 ),
                 content: FormBuilder(
                   key: _fbKey,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  skipDisabled: true,
-                  onChanged: () {
-                    _fbKey.currentState!.save();
-                  },
                   child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Form(
@@ -332,7 +335,7 @@ class _PendingListPage extends State<PendingListPage> {
                                 name: "responsible",
                                 focusColor: Colors.white,
                                 validator: FormBuilderValidators.compose([
-                                  FormBuilderValidators.required()
+                                  FormBuilderValidators.required(),
                                 ]), //elevation: 5,
                                 decoration: const InputDecoration(
                                   hintText: "Seleccionar Responsable",
@@ -356,7 +359,38 @@ class _PendingListPage extends State<PendingListPage> {
                             ),
                             ElevatedButton(
                               child: const Text("Asignar"),
-                              onPressed: () {},
+                              onPressed: () async {
+                                if (_fbKey.currentState?.saveAndValidate() ??
+                                    false) {
+                                  if (this
+                                              .lista
+                                              .where((element) =>
+                                                  element.selected == true)
+                                              .length >
+                                          0 &&
+                                      _fbKey.currentState?.fields['responsible']
+                                              ?.value !=
+                                          null) {
+                                    final params = jsonEncode(<String, dynamic>{
+                                      'idResponsible': _fbKey.currentState
+                                          ?.fields['responsible']?.value,
+                                      'reportsToAssign': lista
+                                          .where((element) =>
+                                              element.selected == true)
+                                          .map((e) => e.id)
+                                          .toList()
+                                    });
+                                    await _saveResponsible(params);
+                                    debugPrint(params);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PendingListPage()),
+                                    );
+                                  }
+                                }
+                              },
                             ),
                           ]))),
                 )));

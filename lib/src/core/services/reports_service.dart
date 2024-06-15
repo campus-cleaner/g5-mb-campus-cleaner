@@ -9,14 +9,13 @@ import 'package:g5_mb_campus_cleaner/src/core/models/users_combo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class ReportService{
+class ReportService {
   ReportService();
   Future<List<PendingReport>> getMyReports() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.get(
-          Uri.parse(
-              '${Environment.apiUrl}/report/getMyReports'),
+          Uri.parse('${Environment.apiUrl}/report/getMyReports'),
           headers: {'Authorization': 'Bearer ${prefs.getString('token')}'});
 
       if (response.statusCode == 200) {
@@ -36,24 +35,27 @@ class ReportService{
 
   Future<Response> reportImage(File file) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final request = await http.MultipartRequest("POST",
-      Uri.parse(
-          '${Environment.apiUrl}/report/getMyReports'),);
+    final request = await http.MultipartRequest(
+      "POST",
+      Uri.parse('${Environment.apiUrl}/report/getMyReports'),
+    );
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
     headers.addAll({"Authorization": 'Bearer ${prefs.getString('token')}'});
-    request.files.add(http.MultipartFile('photo', file.readAsBytes().asStream(), file.lengthSync(), filename: file.path.split("/").last));
+    request.files.add(http.MultipartFile(
+        'photo', file.readAsBytes().asStream(), file.lengthSync(),
+        filename: file.path.split("/").last));
     request.headers.addAll(headers);
     final response = await request.send();
     var responseData = await response.stream.bytesToString();
     final decodedMap = json.decode(responseData);
     return Response.fromJson(decodedMap);
   }
+
   Future<List<UserCombo>> getCombo() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.get(
-          Uri.parse(
-              '${Environment.apiUrl}/report/getCleaners'),
+          Uri.parse('${Environment.apiUrl}/report/getCleaners'),
           headers: {'Authorization': 'Bearer ${prefs.getString('token')}'});
 
       if (response.statusCode == 200) {
@@ -70,12 +72,12 @@ class ReportService{
     }
     return [];
   }
+
   Future<List<PendingReport>> getReportsToAttend() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.get(
-          Uri.parse(
-              '${Environment.apiUrl}/report/getReportsByResponsible'),
+          Uri.parse('${Environment.apiUrl}/report/getReportsByResponsible'),
           headers: {'Authorization': 'Bearer ${prefs.getString('token')}'});
 
       if (response.statusCode == 200) {
@@ -97,8 +99,7 @@ class ReportService{
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.get(
-          Uri.parse(
-              '${Environment.apiUrl}/report/getPendingsToAssign'),
+          Uri.parse('${Environment.apiUrl}/report/getPendingsToAssign'),
           headers: {'Authorization': 'Bearer ${prefs.getString('token')}'});
 
       if (response.statusCode == 200) {
@@ -114,5 +115,20 @@ class ReportService{
       debugPrint(e.toString());
     }
     return [];
+  }
+
+  Future<Response> assignResponsible(String params) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse('${Environment.apiUrl}/report/assignResponsible'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${prefs.getString('token')}'
+      },
+      body: params,
+    );
+    final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+    var responseMsg = Response.fromJson(decoded);
+    return responseMsg;
   }
 }
