@@ -34,4 +34,39 @@ class LoginService {
     }
 
   }
+
+  Future<LoginResponse?> signUp(
+      {required String username,
+        required String password,
+        required String email,
+        required String fullname,
+        required String phone,
+        required String? tokenDevice}) async {
+    try{
+      final response = await http.post(
+        Uri.parse('${Environment.apiUrl}/user/signIn'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode(<String, dynamic>{
+          'username': username,
+          'password': password,
+          'tokenApp': tokenDevice,
+          'email': email,
+          'fullname': fullname,
+          'phone': phone
+        }),
+      );
+      if(response.statusCode == 200) {
+        final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+        var responseMsg = LoginResponse.fromJson(decoded);
+        return responseMsg;
+      } else {
+        throw new Exception("Cannot register");
+      }
+
+    } catch (e) {
+      print(e);
+      return null;
+    }
+
+  }
 }

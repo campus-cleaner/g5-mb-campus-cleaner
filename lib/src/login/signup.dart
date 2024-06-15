@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
 import 'package:g5_mb_campus_cleaner/src/login/login.dart';
+import 'package:g5_mb_campus_cleaner/src/login/welcome_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../core/services/login_service.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -21,10 +27,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool viewFirstPassword = false;
   bool viewSecondPassword = false;
   final _fbKey = GlobalKey<FormBuilderState>();
+  final loginService = LoginService();
 
   @override
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
+
     mediaSize = MediaQuery.of(context).size;
     return Container(
       decoration: const BoxDecoration(
@@ -174,13 +182,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
           debugPrint(_fbKey.currentState?.value.toString());
           if (_fbKey.currentState?.saveAndValidate() ?? false) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            );
+            final username = _fbKey.currentState?.fields["email"]?.value;
+            final email = _fbKey.currentState?.fields["email"]?.value;
+            final fullname = _fbKey.currentState?.fields["name"]?.value;
+            final password = _fbKey.currentState?.fields["password"]?.value;
+            final phone = _fbKey.currentState?.fields["cellphone"]?.value;
+            var response = await loginService.signUp(
+                username: username, password: password, tokenDevice: null, email: email, fullname: fullname, phone: phone);
+            if(response == null) {
+              return;
+            }
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('token', response.token);
+            if (response.rol == 'ADMIN') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PendingListPage()),
+              );
+            } else if (response.rol == 'CLEANER') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PendingListResponsiblePage()),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WelcomeView()),
+              );
+            }
           }
         },
         style: ElevatedButton.styleFrom(
