@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
-import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
+import 'package:g5_mb_campus_cleaner/src/core/models/users_combo.dart';
+import 'package:g5_mb_campus_cleaner/src/core/services/reports_service.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 import 'package:g5_mb_campus_cleaner/src/login/login.dart';
+import 'package:g5_mb_campus_cleaner/src/utils/report_util.dart';
 
 class PendingListPage extends StatefulWidget {
   const PendingListPage({super.key});
@@ -18,192 +21,41 @@ class _PendingListPage extends State<PendingListPage> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
-  List<CleanerPersonal> dummyData = [
-    CleanerPersonal(id: 1, label: 'Alice'),
-    CleanerPersonal(id: 2, label: 'Bob'),
-    CleanerPersonal(id: 3, label: 'Charlie'),
-    CleanerPersonal(id: 4, label: 'David'),
-    CleanerPersonal(id: 5, label: 'Eve'),
-  ];
-  List<PendingReport> lista = [
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Office A',
-      status: 'Pending',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Warehouse B',
-      status: 'In Progress',
-      dateReport: '12/05/2024',
-      selected: true,
-    ),
-    PendingReport(
-      location: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    ),
-    PendingReport(
-      location: 'Store C',
-      status: 'Completed',
-      dateReport: '12/05/2024',
-      selected: false,
-    )
-  ];
+  List<UserCombo> usuariosCleaners = [];
+  List<PendingReport> lista = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getPendientes();
+    _getCleaners();
+  }
+
+  void _getCleaners() async {
+    final service = ReportService();
+    final response = await service.getCombo();
+    setState(() {
+      usuariosCleaners = response;
+    });
+  }
+
+  void _getPendientes() async {
+    final service = ReportService();
+    final response = await service.getReportsToAssign();
+    setState(() {
+      lista = response;
+    });
+  }
+
+  Future<void> _saveResponsible(String data) async {
+    final service = ReportService();
+    final response = await service.assignResponsible(data);
+  }
+
   @override
   Widget build(BuildContext context) {
-    _fbKey.currentState?.fields['responsible']!.setValue(dummyData[0].id);
+    _fbKey.currentState?.fields['responsible']!
+        .setValue(usuariosCleaners[0].id);
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -225,13 +77,13 @@ class _PendingListPage extends State<PendingListPage> {
               ),
               accountName: Text(
                 "Usuario XYZ",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
               accountEmail: Text(
                 "marco.mezaCancho@unmsm.edu.pe",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
               currentAccountPicture: CircleAvatar(
                 radius: 60.0,
@@ -423,11 +275,8 @@ class _PendingListPage extends State<PendingListPage> {
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const DetailReportPage()),
-                        );
+                        ReportUtil.navigateToDetailReportPage(
+                            context, lista.elementAt(index));
                       },
                   )
                 ],
@@ -471,11 +320,6 @@ class _PendingListPage extends State<PendingListPage> {
                 ),
                 content: FormBuilder(
                   key: _fbKey,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  skipDisabled: true,
-                  onChanged: () {
-                    _fbKey.currentState!.save();
-                  },
                   child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Form(
@@ -487,7 +331,7 @@ class _PendingListPage extends State<PendingListPage> {
                                 name: "responsible",
                                 focusColor: Colors.white,
                                 validator: FormBuilderValidators.compose([
-                                  FormBuilderValidators.required()
+                                  FormBuilderValidators.required(),
                                 ]), //elevation: 5,
                                 decoration: const InputDecoration(
                                   hintText: "Seleccionar Responsable",
@@ -501,17 +345,48 @@ class _PendingListPage extends State<PendingListPage> {
                                         BorderSide(color: Color(0xFFFF4240)),
                                   ),
                                 ),
-                                items: dummyData
+                                items: usuariosCleaners
                                     .map((data) => DropdownMenuItem(
                                         value: data.id,
-                                        child: Text(data.label)))
+                                        child: Text(data.label!)))
                                     .toList()),
                             const SizedBox(
                               height: 20,
                             ),
                             ElevatedButton(
                               child: const Text("Asignar"),
-                              onPressed: () {},
+                              onPressed: () async {
+                                if (_fbKey.currentState?.saveAndValidate() ??
+                                    false) {
+                                  if (this
+                                              .lista
+                                              .where((element) =>
+                                                  element.selected == true)
+                                              .length >
+                                          0 &&
+                                      _fbKey.currentState?.fields['responsible']
+                                              ?.value !=
+                                          null) {
+                                    final params = jsonEncode(<String, dynamic>{
+                                      'idResponsible': _fbKey.currentState
+                                          ?.fields['responsible']?.value,
+                                      'reportsToAssign': lista
+                                          .where((element) =>
+                                              element.selected == true)
+                                          .map((e) => e.id)
+                                          .toList()
+                                    });
+                                    await _saveResponsible(params);
+                                    debugPrint(params);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PendingListPage()),
+                                    );
+                                  }
+                                }
+                              },
                             ),
                           ]))),
                 )));

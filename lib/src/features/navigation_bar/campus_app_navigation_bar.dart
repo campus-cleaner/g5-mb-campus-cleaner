@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/src/features/news_admin/NewsAdminPage.dart';
-import 'package:g5_mb_campus_cleaner/src/features/news_page/NewsPage.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/features/news_admin/news_admin_page.dart';
+import 'package:g5_mb_campus_cleaner/src/features/news_page/news_page.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/pending_list_page_by_responsible.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
-import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
-import 'package:g5_mb_campus_cleaner/src/login/welcome_view.dart';
+import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/my_reports_page.dart';
+import 'package:g5_mb_campus_cleaner/src/login/welcome_page.dart';
 
 class CampusNavigationBar {
   static BottomNavigationBar buildNav(BuildContext context) {
@@ -47,8 +47,10 @@ class CampusNavigationBar {
       onTap: (int index) {
         switch (index) {
           case 0:
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PendingListResponsiblePage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PendingListResponsiblePage()));
           case 1:
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => NewsPage()));
@@ -76,20 +78,14 @@ class CampusNavigationBar {
       onTap: (int index) {
         switch (index) {
           case 0:
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const WelcomeView()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const WelcomePage()));
           case 1:
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const PendingListUserPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const MyReportsPage()));
           case 2:
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const NewsPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const NewsPage()));
         }
       },
     );

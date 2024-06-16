@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report_form.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/core/services/login_service.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/pending_list_page_by_responsible.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
-import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/PendingListPageByUser.dart';
 import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
-import 'package:g5_mb_campus_cleaner/src/login/welcome_view.dart';
+import 'package:g5_mb_campus_cleaner/src/login/welcome_page.dart';
+import 'package:g5_mb_campus_cleaner/src/utils/button_util.dart';
+import 'package:g5_mb_campus_cleaner/src/utils/text_util.dart';
+import 'package:g5_mb_campus_cleaner/src/widgets/alert_widget.dart';
+import 'package:g5_mb_campus_cleaner/src/widgets/login_background_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,74 +21,45 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _fbKey = GlobalKey<FormBuilderState>();
+  final loginService = LoginService();
   late Color myColor;
   late Size mediaSize;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  bool rememberUser = false;
   bool viewPassword = false;
 
   @override
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-        image: DecorationImage(
-            image: AssetImage("assets/images/bg.png"), fit: BoxFit.cover),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(children: [
-          Positioned(top: 110, child: _buildTop()),
-          Positioned(bottom: 20, child: _buildBottom()),
-        ]),
-      ),
+    return Scaffold(
+      body: Scrollbar(
+          child: SingleChildScrollView(
+              child: Column(children: [_buildTop(), _buildBottom()]))),
     );
   }
 
   Widget _buildTop() {
-    return SizedBox(
-      width: mediaSize.width,
-      height: 500,
-      child: const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "Iniciar Sesión",
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Quicksand',
-                fontSize: 40,
-                letterSpacing: 2),
-          )
-        ],
-      ),
-    );
+    return LoginBackgroundWidget(
+        child: SizedBox(
+            width: mediaSize.width,
+            height: 280,
+            child: Center(
+                child: TextUtil.buildBigWhiteAndBoldText("Iniciar Sesión"))));
   }
 
   Widget _buildBottom() {
-    return SizedBox(
-        width: mediaSize.width,
-        height: 500,
-        child: Scrollbar(
-          child: SingleChildScrollView(
-            child: Card(
-              color: Colors.white,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-              )),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: _buildForm(),
-              ),
-            ),
-          ),
-        ));
+    return Card(
+      color: Colors.white,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(30),
+        topRight: Radius.circular(30),
+      )),
+      shadowColor: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: _buildForm(),
+      ),
+    );
   }
 
   Widget _buildForm() {
@@ -93,64 +68,44 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildBlackAndBoldText("Correo"),
-            _buildInputField("email",
+            TextUtil.buildBoldText("Correo"),
+            _buildInputField("email", "Escribe tu correo",
                 validatorForm:
-                    FormBuilderValidators.email(errorText: "Correo inválido"),
+                    FormBuilderValidators.email(errorText: "Correo inválido."),
                 isEmail: true),
             const SizedBox(height: 40),
-            _buildBlackAndBoldText("Contraseña"),
-            _buildInputField("password", isPassword: true),
-            const SizedBox(height: 20),
+            TextUtil.buildBoldText("Contraseña"),
+            _buildInputField("password", "Escribe tu contraseña",
+                isPassword: true),
+            const SizedBox(height: 30),
             _buildLoginButton(),
-            const SizedBox(height: 20),
-            _buildOtherLogin(),
+            const SizedBox(height: 30),
+            _signup(),
           ],
         ));
   }
 
-  Widget _buildBlackText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(color: Colors.black, fontFamily: 'Quicksand'),
-    );
-  }
-
-  Widget _buildGreenText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-          color: Color.fromARGB(255, 31, 172, 90),
-          fontFamily: 'Quicksand',
-          fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget _buildBlackAndBoldText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Quicksand'),
-    );
-  }
-
-  Widget _buildInputField(String text,
+  Widget _buildInputField(String text, String placeholder,
       {String? Function(String?)? validatorForm,
       isPassword = false,
       isEmail = false,
       isPhone = false}) {
     return FormBuilderTextField(
       name: text,
+      style: const TextStyle(
+          color: Colors.black, fontFamily: 'Quicksand', fontSize: 15),
       validator: validatorForm != null
           ? FormBuilderValidators.compose([
               validatorForm,
-              FormBuilderValidators.required(errorText: "Campo obligatorio")
+              FormBuilderValidators.required(errorText: "Campo obligatorio.")
             ])
-          : FormBuilderValidators.compose(
-              [FormBuilderValidators.required(errorText: "Campo obligatorio")]),
+          : FormBuilderValidators.compose([
+              FormBuilderValidators.required(errorText: "Campo obligatorio.")
+            ]),
       decoration: InputDecoration(
+        hintText: placeholder,
+        hintStyle: const TextStyle(
+            color: Colors.black, fontFamily: 'Quicksand', fontSize: 15),
         suffixIcon: isPassword
             ? IconButton(
                 icon: const Icon(Icons.remove_red_eye),
@@ -167,93 +122,74 @@ class _LoginPageState extends State<LoginPage> {
                     : const Icon(Icons.text_fields),
       ),
       obscureText: isPassword ? !viewPassword : false,
-    );
-  }
-
-  Widget _buildRememberForgot() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Checkbox(
-                value: rememberUser,
-                onChanged: (value) {
-                  setState(() {
-                    rememberUser = value!;
-                  });
-                }),
-            _buildBlackText("Mantener abierto"),
-          ],
-        ),
-        TextButton(
-            onPressed: () {}, child: _buildBlackText("¿Olvidó su contraseña?"))
-      ],
+      keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.text,
     );
   }
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-        onPressed: () {
-          debugPrint(_fbKey.currentState?.value.toString());
+        onPressed: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
           if (_fbKey.currentState?.saveAndValidate() ?? false) {
-            if (_fbKey.currentState?.fields["email"]?.value ==
-                'admin@unmsm.edu.pe') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PendingListPage()),
+            final user = _fbKey.currentState?.fields["email"]?.value;
+            final pass = _fbKey.currentState?.fields["password"]?.value;
+            var response = await loginService.login(
+                username: user, password: pass, tokenDevice: null);
+            if (!mounted) return;
+            if (response == null) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return const AlertWidget(
+                      title: "¡Error!",
+                      description: "El usuario no existe.",
+                      icon: "assets/images/fail.svg",
+                      isValid: false);
+                },
               );
-            } else if (_fbKey.currentState?.fields["email"]?.value ==
-                'cleaner@unmsm.edu.pe') {
+              return;
+            }
+            await prefs.setString('token', response.token);
+            if (!mounted) return;
+            if (response.rol == 'ADMIN') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => PendingListResponsiblePage()),
+                    builder: (context) => const PendingListPage()),
+              );
+            } else if (response.rol == 'CLEANER') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const PendingListResponsiblePage()),
               );
             } else {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WelcomeView()),
+                MaterialPageRoute(builder: (context) => const WelcomePage()),
               );
             }
           }
         },
-        style: ElevatedButton.styleFrom(
-          shape: const StadiumBorder(),
-          elevation: 20,
-          backgroundColor: const Color.fromARGB(255, 31, 172, 90),
-          minimumSize: const Size.fromHeight(60),
-        ),
-        child: const Text(
-          "Iniciar",
-          style: TextStyle(color: Colors.white),
-        ));
-  }
-
-  Widget _buildOtherLogin() {
-    return Center(
-      child: Column(
-        children: [
-          _signup(),
-          const SizedBox(height: 10),
-        ],
-      ),
-    );
+        style: ButtonUtil.buildGreenButton(),
+        child: TextUtil.buildBoldText("INICIAR", color: Colors.white));
   }
 
   Widget _signup() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildBlackText("¿Aún no tienes una cuenta? Regístrate "),
+        TextUtil.buildBlackText("¿Aún no tienes una cuenta? Regístrate "),
         GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                MaterialPageRoute(builder: (context) => const SignUpPage()),
               );
             },
-            child: _buildGreenText("aquí"))
+            child: TextUtil.buildBoldText("aquí",
+                color: const Color.fromRGBO(31, 172, 90, 1)))
       ],
     );
   }
