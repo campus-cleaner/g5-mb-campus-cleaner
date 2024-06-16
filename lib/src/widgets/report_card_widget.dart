@@ -1,22 +1,23 @@
 import 'dart:io';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/src/utils/format_text_util.dart';
 import 'package:g5_mb_campus_cleaner/src/utils/text_util.dart';
 
 class ReportCardWidget extends StatelessWidget {
-  final String locationMessage;
-  final DateTime dateTime;
+  final double latitude;
+  final double longitude;
+  final String dateTime;
   final File image;
   final String reference;
   final String comment;
   const ReportCardWidget(
       {super.key,
-      required this.locationMessage,
       required this.dateTime,
       required this.image,
       required this.reference,
-      required this.comment});
+      required this.comment,
+      required this.latitude,
+      required this.longitude});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,7 @@ class ReportCardWidget extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          TextUtil.buildBlackText(FormatTextUtil.formatDateTime(dateTime)),
+          TextUtil.buildBlackText(dateTime),
           const SizedBox(
             height: 20,
           ),
@@ -114,7 +115,8 @@ class ReportCardWidget extends StatelessWidget {
                   const SizedBox(
                     height: 5,
                   ),
-                  TextUtil.buildBlackText(locationMessage)
+                  TextUtil.buildBlackText(
+                      "Latitud: $latitude, Longitud: $longitude")
                 ],
               )),
               Expanded(

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/src/core/services/login_service.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/pending_list_page_by_responsible.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
 import 'package:g5_mb_campus_cleaner/src/login/signup.dart';
 import 'package:g5_mb_campus_cleaner/src/login/welcome_page.dart';
 import 'package:g5_mb_campus_cleaner/src/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/src/utils/text_util.dart';
+import 'package:g5_mb_campus_cleaner/src/widgets/alert_widget.dart';
 import 'package:g5_mb_campus_cleaner/src/widgets/login_background_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -134,25 +135,39 @@ class _LoginPageState extends State<LoginPage> {
             final pass = _fbKey.currentState?.fields["password"]?.value;
             var response = await loginService.login(
                 username: user, password: pass, tokenDevice: null);
+            if (!mounted) return;
             if (response == null) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return const AlertWidget(
+                      title: "¡Error!",
+                      description: "El usuario no existe.",
+                      icon: "assets/images/fail.svg",
+                      isValid: false);
+                },
+              );
               return;
             }
             await prefs.setString('token', response.token);
+            if (!mounted) return;
             if (response.rol == 'ADMIN') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PendingListPage()),
+                MaterialPageRoute(
+                    builder: (context) => const PendingListPage()),
               );
             } else if (response.rol == 'CLEANER') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => PendingListResponsiblePage()),
+                    builder: (context) => const PendingListResponsiblePage()),
               );
             } else {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WelcomePage()),
+                MaterialPageRoute(builder: (context) => const WelcomePage()),
               );
             }
           }

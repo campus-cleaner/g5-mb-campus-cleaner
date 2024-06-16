@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:g5_mb_campus_cleaner/src/core/global/env.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/login_response.dart';
-import 'package:g5_mb_campus_cleaner/src/core/models/response.dart';
+import 'package:g5_mb_campus_cleaner/src/utils/logger_util.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginService {
   Future<LoginResponse?> login(
@@ -26,10 +24,10 @@ class LoginService {
         var responseMsg = LoginResponse.fromJson(decoded);
         return responseMsg;
       } else {
-        throw new Exception("User not found");
+        throw Exception("User $username was not found.");
       }
     } catch (e) {
-      print(e);
+      LoggerUtil.logError(e.toString());
       return null;
     }
   }
@@ -59,10 +57,10 @@ class LoginService {
         var responseMsg = LoginResponse.fromJson(decoded);
         return responseMsg;
       } else {
-        throw new Exception("Cannot register");
+        throw Exception("User $username can't be registered.");
       }
     } catch (e) {
-      print(e);
+      LoggerUtil.logError(e.toString());
       return null;
     }
   }

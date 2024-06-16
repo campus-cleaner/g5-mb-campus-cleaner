@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/src/features/news_admin/NewsAdminPage.dart';
+import 'package:g5_mb_campus_cleaner/src/features/news_admin/news_admin_page.dart';
 import 'package:g5_mb_campus_cleaner/src/features/news_page/news_page.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/pending_list_page_by_responsible.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
 import 'package:g5_mb_campus_cleaner/src/features/reports_by_user/my_reports_page.dart';
 import 'package:g5_mb_campus_cleaner/src/login/welcome_page.dart';

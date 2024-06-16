@@ -4,13 +4,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/users_combo.dart';
 import 'package:g5_mb_campus_cleaner/src/core/services/reports_service.dart';
-import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
 import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
 import 'package:g5_mb_campus_cleaner/src/login/login.dart';
+import 'package:g5_mb_campus_cleaner/src/utils/report_util.dart';
 
 class PendingListPage extends StatefulWidget {
   const PendingListPage({super.key});
@@ -276,11 +275,8 @@ class _PendingListPage extends State<PendingListPage> {
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const DetailReportPage()),
-                        );
+                        ReportUtil.navigateToDetailReportPage(
+                            context, lista.elementAt(index));
                       },
                   )
                 ],

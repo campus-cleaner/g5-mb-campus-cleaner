@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:g5_mb_campus_cleaner/src/features/detail_report/new_report_form_page.dart';
 
 class AlertWidget extends StatelessWidget {
   final String title;
   final String icon;
   final String description;
   final bool isValid;
+  final Widget? target;
 
   const AlertWidget({
     super.key,
@@ -14,6 +14,7 @@ class AlertWidget extends StatelessWidget {
     required this.description,
     required this.isValid,
     required this.icon,
+    this.target,
   });
 
   @override
@@ -109,10 +110,10 @@ class AlertWidget extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const NewReportFormPage()));
+                if (target != null) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => target!));
+                }
               },
               child: SvgPicture.asset(
                 "assets/images/close.svg",

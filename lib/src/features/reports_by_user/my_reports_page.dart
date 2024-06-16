@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/src/core/services/reports_service.dart';
-import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report.dart';
+import 'package:g5_mb_campus_cleaner/src/utils/format_text_util.dart';
+import 'package:g5_mb_campus_cleaner/src/utils/report_util.dart';
 import 'package:g5_mb_campus_cleaner/src/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/src/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/src/widgets/custom_app_bar_widget.dart';
@@ -24,7 +25,19 @@ class _MyReportsPage extends State<MyReportsPage> {
     CleanerPersonal(id: 4, label: 'David'),
     CleanerPersonal(id: 5, label: 'Eve'),
   ];
-  List<PendingReport> lista = [];
+  List<PendingReport> lista = [
+    PendingReport(
+        id: 0,
+        reference: "Huaca",
+        imageRoute: "./.",
+        latitude: 5.8,
+        longitude: 6.0,
+        comment: "dffs",
+        userRegister: "Nicole Morales",
+        idUserRegister: 1,
+        status: "En progreso",
+        dateReport: FormatTextUtil.formatDateTime(DateTime.now()))
+  ];
 
   @override
   void initState() {
@@ -36,7 +49,7 @@ class _MyReportsPage extends State<MyReportsPage> {
     final service = ReportService();
     final response = await service.getMyReports();
     setState(() {
-      lista = response;
+      //lista = response;
     });
   }
 
@@ -120,18 +133,15 @@ class _MyReportsPage extends State<MyReportsPage> {
                         fontSize: 15),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const DetailReportPage()),
-                        );
+                        ReportUtil.navigateToDetailReportPage(
+                            context, lista.elementAt(index));
                       },
                   )
                 ],
               ),
             ),
           ),
-          TextUtil.buildBlackText(lista[index].status!)
+          TextUtil.buildBlackText(lista.elementAt(index).status!)
         ],
       ),
     );

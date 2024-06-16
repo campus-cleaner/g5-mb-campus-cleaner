@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/pending_list_page_by_responsible.dart';
 import 'package:g5_mb_campus_cleaner/src/features/pending_list/pending_list_page.dart';
 import 'package:g5_mb_campus_cleaner/src/login/login.dart';
 import 'package:g5_mb_campus_cleaner/src/login/welcome_page.dart';
 import 'package:g5_mb_campus_cleaner/src/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/src/utils/text_util.dart';
+import 'package:g5_mb_campus_cleaner/src/widgets/alert_widget.dart';
 import 'package:g5_mb_campus_cleaner/src/widgets/login_background_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../core/services/login_service.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -91,7 +91,12 @@ class _SignUpPageState extends State<SignUpPage> {
             TextUtil.buildBoldText("Confirmar Contraseña"),
             _buildInputField(
                 "secondPassword", "Vuelve a escribir tu contraseña",
-                isPassword: true, passwordNumber: 2),
+                isPassword: true, passwordNumber: 2, validatorForm: (val) {
+              if (val != _fbKey.currentState?.fields['password']?.value) {
+                return "Las contraseñas no coinciden.";
+              }
+              return null;
+            }),
             const SizedBox(height: 30),
             _buildSignUpButton(),
             const SizedBox(height: 30),
@@ -172,29 +177,47 @@ class _SignUpPageState extends State<SignUpPage> {
                 email: email,
                 fullname: fullname,
                 phone: phone);
+            if (!mounted) return;
             if (response == null) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return const AlertWidget(
+                      title: "¡Error!",
+                      description: "El usuario no ha podido registrarse.",
+                      icon: "assets/images/fail.svg",
+                      isValid: false);
+                },
+              );
               return;
             }
             SharedPreferences prefs = await SharedPreferences.getInstance();
+            late Widget target;
             await prefs.setString('token', response.token);
+            if (!mounted) return;
             if (response.rol == 'ADMIN') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const PendingListPage()),
-              );
+              target = const PendingListPage();
             } else if (response.rol == 'CLEANER') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const PendingListResponsiblePage()),
-              );
+              target = const PendingListResponsiblePage();
+              return;
             } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const WelcomePage()),
-              );
+              target = const WelcomePage();
             }
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertWidget(
+                  title: "¡Registrado!",
+                  description: "El usuario fue registrado correctamente.",
+                  icon: "assets/images/success.svg",
+                  isValid: true,
+                  target: target,
+                );
+              },
+            );
+            return;
           }
         },
         style: ButtonUtil.buildGreenButton(),

@@ -1,12 +1,7 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:g5_mb_campus_cleaner/src/core/models/pending_report.dart';
-import 'package:g5_mb_campus_cleaner/src/features/navigation_bar/campus_app_navigation_bar.dart';
-import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/PendingListPageByResponsible.dart';
+import 'package:g5_mb_campus_cleaner/src/features/pending_by_responsible/pending_list_page_by_responsible.dart';
 
 class DetailReportPendingPage extends StatefulWidget {
   const DetailReportPendingPage({super.key});
@@ -17,9 +12,7 @@ class DetailReportPendingPage extends StatefulWidget {
 class _DetailReportPendingPage extends State<DetailReportPendingPage> {
   late Color myColor;
   late Size mediaSize;
-  List<PendingReport> lista = [
-
-  ];
+  List<PendingReport> lista = [];
   @override
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
@@ -96,7 +89,9 @@ class _DetailReportPendingPage extends State<DetailReportPendingPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Row(
               children: [Text("Comentario")],
             )
@@ -119,7 +114,9 @@ class _DetailReportPendingPage extends State<DetailReportPendingPage> {
                                 "Enviando : ${lista.where((element) => element.selected == true)}");
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => PendingListResponsiblePage()),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      PendingListResponsiblePage()),
                             );
                           },
                 style: ElevatedButton.styleFrom(

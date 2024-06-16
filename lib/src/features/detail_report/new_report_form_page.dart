@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/src/features/detail_report/detail_report_pre_confirm_page.dart';
 import 'package:g5_mb_campus_cleaner/src/utils/button_util.dart';
+import 'package:g5_mb_campus_cleaner/src/utils/format_text_util.dart';
 import 'package:g5_mb_campus_cleaner/src/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/src/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/src/widgets/camera_button_widget.dart';
@@ -38,7 +39,6 @@ class _NewReportFormPageState extends State<NewReportFormPage> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Verificar si los servicios de ubicación están habilitados
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       setState(() {
@@ -47,7 +47,6 @@ class _NewReportFormPageState extends State<NewReportFormPage> {
       return;
     }
 
-    // Verificar el permiso de ubicación
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -67,7 +66,6 @@ class _NewReportFormPageState extends State<NewReportFormPage> {
       return;
     }
 
-    // Obtener la ubicación actual
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     setState(() {
@@ -253,8 +251,7 @@ class _NewReportFormPageState extends State<NewReportFormPage> {
               MaterialPageRoute(
                   builder: (context) => DetailReportPreConfirmPage(
                         formData: formData,
-                        locationMessage: _locationMessage,
-                        fechaHora: DateTime.now(),
+                        dateTime: FormatTextUtil.formatDateTime(DateTime.now()),
                         image: _image!,
                         latitude: _latitude,
                         longitude: _longitude,

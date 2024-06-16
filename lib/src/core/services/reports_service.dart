@@ -35,15 +35,13 @@ class ReportService {
 
   Future<Response> reportImage(File file) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final request = await http.MultipartRequest(
+    final request = http.MultipartRequest(
       "POST",
-      Uri.parse('${Environment.apiUrl}/report/getMyReports'),
+      Uri.parse('${Environment.apiUrl}/report/registerPhoto'),
     );
+    request.files.add(await http.MultipartFile.fromPath('photo', file.path));
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
     headers.addAll({"Authorization": 'Bearer ${prefs.getString('token')}'});
-    request.files.add(http.MultipartFile(
-        'photo', file.readAsBytes().asStream(), file.lengthSync(),
-        filename: file.path.split("/").last));
     request.headers.addAll(headers);
     final response = await request.send();
     var responseData = await response.stream.bytesToString();
