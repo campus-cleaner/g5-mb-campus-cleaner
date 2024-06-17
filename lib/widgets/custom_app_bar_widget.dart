@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/screens/login.dart';
+import 'package:g5_mb_campus_cleaner/screens/log_in_page.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 
 class CustomAppBarWidget extends StatelessWidget
@@ -29,7 +29,7 @@ class CustomAppBarWidget extends StatelessWidget
               if (value == 'logout') {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  MaterialPageRoute(builder: (context) => const LogInPage()),
                 );
               }
             },

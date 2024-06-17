@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/my_reports_page.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/new_report_form_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/report_history_unmsm_member_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/report_to_send_form_unmsm_member_page.dart';
 import 'package:g5_mb_campus_cleaner/screens/admin/news_admin_page.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/news_page.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/cleaner/pending_list_page_by_responsible.dart';
-import 'package:g5_mb_campus_cleaner/screens/admin/pending_list_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/news_user_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/admin/report_to_asign_list_admin_page.dart';
 
 class AppNavigationBarWidget extends StatelessWidget {
   final int currentIndex;
@@ -40,15 +40,19 @@ class AppNavigationBarWidget extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const NewReportFormPage()));
+                        builder: (context) =>
+                            const ReportToSendFormUnmsmMemberPage()));
               case 1:
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const MyReportsPage()));
+                        builder: (context) =>
+                            const ReportHistoryUnmsmMemberPage()));
               case 2:
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const NewsPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NewsUserPage()));
             }
             break;
           case 1:
@@ -58,10 +62,12 @@ class AppNavigationBarWidget extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            const PendingListResponsiblePage()));
+                            const ReportToResolveListCleanerPage()));
               case 1:
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const NewsPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NewsUserPage()));
             }
             break;
           case 2:
@@ -70,7 +76,8 @@ class AppNavigationBarWidget extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PendingListPage()));
+                        builder: (context) =>
+                            const ReportToAsignListAdminPage()));
               case 1:
                 Navigator.push(
                     context,

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/new_report_form_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/report_to_send_form_unmsm_member_page.dart';
 import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/alert_widget.dart';
@@ -8,13 +8,13 @@ import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/report_card_widget.dart';
 
-class DetailReportPreConfirmPage extends StatefulWidget {
+class ReportToSendDetailUnmsmMemberPage extends StatefulWidget {
   final Map<String, dynamic> formData;
   final String dateTime;
   final File image;
   final double latitude;
   final double longitude;
-  const DetailReportPreConfirmPage(
+  const ReportToSendDetailUnmsmMemberPage(
       {super.key,
       required this.formData,
       required this.dateTime,
@@ -23,11 +23,12 @@ class DetailReportPreConfirmPage extends StatefulWidget {
       required this.longitude});
 
   @override
-  State<DetailReportPreConfirmPage> createState() =>
-      _DetailReportPreConfirmPage();
+  State<ReportToSendDetailUnmsmMemberPage> createState() =>
+      _ReportToSendDetailUnmsmMemberPageState();
 }
 
-class _DetailReportPreConfirmPage extends State<DetailReportPreConfirmPage> {
+class _ReportToSendDetailUnmsmMemberPageState
+    extends State<ReportToSendDetailUnmsmMemberPage> {
   late Color myColor;
   late Size mediaSize;
   late bool imageIsValid;
@@ -101,14 +102,14 @@ class _DetailReportPreConfirmPage extends State<DetailReportPreConfirmPage> {
                 description: "El reporte fue enviado correctamente.",
                 icon: "assets/images/success.svg",
                 isValid: true,
-                target: NewReportFormPage())
+                target: ReportToSendFormUnmsmMemberPage())
             : const AlertWidget(
                 title: "¡Error!",
                 description:
                     "En la foto no se identifica algún desperdicio que debe ser limpiado.",
                 icon: "assets/images/fail.svg",
                 isValid: false,
-                target: NewReportFormPage(),
+                target: ReportToSendFormUnmsmMemberPage(),
               );
       },
     );

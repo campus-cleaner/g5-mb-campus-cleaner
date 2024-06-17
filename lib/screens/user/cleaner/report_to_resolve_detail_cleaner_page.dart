@@ -1,15 +1,17 @@
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/cleaner/pending_list_page_by_responsible.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
 
-class DetailReportPendingPage extends StatefulWidget {
-  const DetailReportPendingPage({super.key});
+class ReportToResolveDetailCleanerPage extends StatefulWidget {
+  const ReportToResolveDetailCleanerPage({super.key});
   @override
-  State<DetailReportPendingPage> createState() => _DetailReportPendingPage();
+  State<ReportToResolveDetailCleanerPage> createState() =>
+      _ReportToResolveDetailCleanerPageState();
 }
 
-class _DetailReportPendingPage extends State<DetailReportPendingPage> {
+class _ReportToResolveDetailCleanerPageState
+    extends State<ReportToResolveDetailCleanerPage> {
   late Color myColor;
   late Size mediaSize;
   List<PendingReport> lista = [];
@@ -116,7 +118,7 @@ class _DetailReportPendingPage extends State<DetailReportPendingPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      PendingListResponsiblePage()),
+                                      ReportToResolveListCleanerPage()),
                             );
                           },
                 style: ElevatedButton.styleFrom(

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/new_report_form_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/report_to_send_form_unmsm_member_page.dart';
 import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 
-class WelcomePage extends StatefulWidget {
-  const WelcomePage({super.key});
+class WelcomeUnmsmMemberPage extends StatefulWidget {
+  const WelcomeUnmsmMemberPage({super.key});
 
   @override
-  State<WelcomePage> createState() => _WelcomePageState();
+  State<WelcomeUnmsmMemberPage> createState() => _WelcomeUnmsmMemberPageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _WelcomeUnmsmMemberPageState extends State<WelcomeUnmsmMemberPage> {
   late Color myColor;
   late Size mediaSize;
 
@@ -60,7 +60,8 @@ class _WelcomePageState extends State<WelcomePage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const NewReportFormPage()),
+            MaterialPageRoute(
+                builder: (context) => const ReportToSendFormUnmsmMemberPage()),
           );
         },
         style: ButtonUtil.buildGreenButton(),

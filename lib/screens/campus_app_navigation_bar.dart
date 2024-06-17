@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/my_reports_page.dart';
 import 'package:g5_mb_campus_cleaner/screens/admin/news_admin_page.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/news_page.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/cleaner/pending_list_page_by_responsible.dart';
-import 'package:g5_mb_campus_cleaner/screens/admin/pending_list_page.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/welcome_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/news_user_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/admin/report_to_asign_list_admin_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/report_history_unmsm_member_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/welcome_unmsm_member_page.dart';
 
 class CampusNavigationBar {
   static BottomNavigationBar buildNav(BuildContext context) {
@@ -22,8 +22,10 @@ class CampusNavigationBar {
       onTap: (int index) {
         switch (index) {
           case 0:
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PendingListPage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReportToAsignListAdminPage()));
           case 1:
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => NewsAdminPage()));
@@ -50,10 +52,10 @@ class CampusNavigationBar {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => PendingListResponsiblePage()));
+                    builder: (context) => ReportToResolveListCleanerPage()));
           case 1:
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => NewsPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => NewsUserPage()));
         }
       },
     );
@@ -78,14 +80,19 @@ class CampusNavigationBar {
       onTap: (int index) {
         switch (index) {
           case 0:
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const WelcomePage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const WelcomeUnmsmMemberPage()));
           case 1:
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const MyReportsPage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const ReportHistoryUnmsmMemberPage()));
           case 2:
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const NewsPage()));
+                MaterialPageRoute(builder: (context) => const NewsUserPage()));
         }
       },
     );

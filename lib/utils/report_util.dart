@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
-import 'package:g5_mb_campus_cleaner/screens/detail_report.dart';
+import 'package:g5_mb_campus_cleaner/screens/report_detail_page.dart';
 import 'package:g5_mb_campus_cleaner/utils/image_util.dart';
 
 class ReportUtil {
@@ -14,7 +14,7 @@ class ReportUtil {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DetailReportPage(
+          builder: (context) => ReportDetailPage(
             reference: report.reference!,
             comment: report.comment!,
             dateTime: report.dateReport!,

@@ -5,16 +5,18 @@ import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/models/users_combo.dart';
 import 'package:g5_mb_campus_cleaner/services/reports_service.dart';
 import 'package:g5_mb_campus_cleaner/screens/campus_app_navigation_bar.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/cleaner/detail_report_pending.dart';
-import 'package:g5_mb_campus_cleaner/screens/login.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_detail_cleaner_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/log_in_page.dart';
 
-class PendingListResponsiblePage extends StatefulWidget {
-  const PendingListResponsiblePage({super.key});
+class ReportToResolveListCleanerPage extends StatefulWidget {
+  const ReportToResolveListCleanerPage({super.key});
   @override
-  State<PendingListResponsiblePage> createState() => _PendingListPage();
+  State<ReportToResolveListCleanerPage> createState() =>
+      _ReportToResolveListCleanerPageState();
 }
 
-class _PendingListPage extends State<PendingListResponsiblePage> {
+class _ReportToResolveListCleanerPageState
+    extends State<ReportToResolveListCleanerPage> {
   final _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
@@ -90,7 +92,8 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
                   title: const Text('Historial de Incidencias'),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const PendingListResponsiblePage(),
+                      builder: (context) =>
+                          const ReportToResolveListCleanerPage(),
                     ),
                   ),
                 ),
@@ -102,7 +105,7 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => LogInPage()),
                 );
               },
             )
@@ -213,7 +216,8 @@ class _PendingListPage extends State<PendingListResponsiblePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DetailReportPendingPage()),
+                              builder: (context) =>
+                                  ReportToResolveDetailCleanerPage()),
                         );
                       },
                   )

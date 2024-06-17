@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/cleaner/pending_list_page_by_responsible.dart';
-import 'package:g5_mb_campus_cleaner/screens/admin/pending_list_page.dart';
-import 'package:g5_mb_campus_cleaner/screens/login.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/welcome_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/admin/report_to_asign_list_admin_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/log_in_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/welcome_unmsm_member_page.dart';
 import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/alert_widget.dart';
@@ -12,13 +12,13 @@ import 'package:g5_mb_campus_cleaner/widgets/login_background_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/login_service.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SignUpUnmsmMemberPage extends StatefulWidget {
+  const SignUpUnmsmMemberPage({super.key});
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignUpUnmsmMemberPage> createState() => _SignUpUnmsmMemberPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpUnmsmMemberPageState extends State<SignUpUnmsmMemberPage> {
   late Color myColor;
   late Size mediaSize;
   bool viewFirstPassword = false;
@@ -197,12 +197,12 @@ class _SignUpPageState extends State<SignUpPage> {
             await prefs.setString('token', response.token);
             if (!mounted) return;
             if (response.rol == 'ADMIN') {
-              target = const PendingListPage();
+              target = const ReportToAsignListAdminPage();
             } else if (response.rol == 'CLEANER') {
-              target = const PendingListResponsiblePage();
+              target = const ReportToResolveListCleanerPage();
               return;
             } else {
-              target = const WelcomePage();
+              target = const WelcomeUnmsmMemberPage();
             }
             showDialog(
               context: context,
@@ -233,7 +233,7 @@ class _SignUpPageState extends State<SignUpPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
+                MaterialPageRoute(builder: (context) => const LogInPage()),
               );
             },
             child: TextUtil.buildBoldText("aquí",

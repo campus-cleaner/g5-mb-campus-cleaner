@@ -3,16 +3,16 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/screens/campus_app_navigation_bar.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/cleaner/pending_list_page_by_responsible.dart';
-import 'package:g5_mb_campus_cleaner/screens/login.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/log_in_page.dart';
 
 class NewsAdminPage extends StatefulWidget {
   const NewsAdminPage({super.key});
   @override
-  State<NewsAdminPage> createState() => _NewsAdminPage();
+  State<NewsAdminPage> createState() => _NewsAdminPageState();
 }
 
-class _NewsAdminPage extends State<NewsAdminPage> {
+class _NewsAdminPageState extends State<NewsAdminPage> {
   final _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
@@ -63,7 +63,8 @@ class _NewsAdminPage extends State<NewsAdminPage> {
                   title: const Text('Historial de Incidencias'),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const PendingListResponsiblePage(),
+                      builder: (context) =>
+                          const ReportToResolveListCleanerPage(),
                     ),
                   ),
                 ),
@@ -75,7 +76,7 @@ class _NewsAdminPage extends State<NewsAdminPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => LogInPage()),
                 );
               },
             )

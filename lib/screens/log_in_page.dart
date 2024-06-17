@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/services/login_service.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/cleaner/pending_list_page_by_responsible.dart';
-import 'package:g5_mb_campus_cleaner/screens/admin/pending_list_page.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/signup.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/welcome_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/admin/report_to_asign_list_admin_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/sign_up_unmsm_member_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/welcome_unmsm_member_page.dart';
 import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/alert_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/login_background_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LogInPage extends StatefulWidget {
+  const LogInPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LogInPage> createState() => _LogInPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LogInPageState extends State<LogInPage> {
   final _fbKey = GlobalKey<FormBuilderState>();
   final loginService = LoginService();
   late Color myColor;
@@ -156,18 +156,20 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const PendingListPage()),
+                    builder: (context) => const ReportToAsignListAdminPage()),
               );
             } else if (response.rol == 'CLEANER') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const PendingListResponsiblePage()),
+                    builder: (context) =>
+                        const ReportToResolveListCleanerPage()),
               );
             } else {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const WelcomePage()),
+                MaterialPageRoute(
+                    builder: (context) => const WelcomeUnmsmMemberPage()),
               );
             }
           }
@@ -185,7 +187,8 @@ class _LoginPageState extends State<LoginPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SignUpPage()),
+                MaterialPageRoute(
+                    builder: (context) => const SignUpUnmsmMemberPage()),
               );
             },
             child: TextUtil.buildBoldText("aquí",

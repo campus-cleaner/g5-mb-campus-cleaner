@@ -4,14 +4,14 @@ import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/report_card_widget.dart';
 
-class DetailReportPage extends StatefulWidget {
+class ReportDetailPage extends StatefulWidget {
   final String reference;
   final String comment;
   final String dateTime;
   final File image;
   final double latitude;
   final double longitude;
-  const DetailReportPage(
+  const ReportDetailPage(
       {super.key,
       required this.reference,
       required this.comment,
@@ -21,10 +21,10 @@ class DetailReportPage extends StatefulWidget {
       required this.longitude});
 
   @override
-  State<DetailReportPage> createState() => _DetailReportPage();
+  State<ReportDetailPage> createState() => _ReportDetailPageState();
 }
 
-class _DetailReportPage extends State<DetailReportPage> {
+class _ReportDetailPageState extends State<ReportDetailPage> {
   late Color myColor;
   late Size mediaSize;
   late bool imageIsValid;

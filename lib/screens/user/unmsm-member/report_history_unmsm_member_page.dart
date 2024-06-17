@@ -9,13 +9,15 @@ import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 
-class MyReportsPage extends StatefulWidget {
-  const MyReportsPage({super.key});
+class ReportHistoryUnmsmMemberPage extends StatefulWidget {
+  const ReportHistoryUnmsmMemberPage({super.key});
   @override
-  State<MyReportsPage> createState() => _MyReportsPage();
+  State<ReportHistoryUnmsmMemberPage> createState() =>
+      _ReportHistoryUnmsmMemberPageState();
 }
 
-class _MyReportsPage extends State<MyReportsPage> {
+class _ReportHistoryUnmsmMemberPageState
+    extends State<ReportHistoryUnmsmMemberPage> {
   late Color myColor;
   late Size mediaSize;
   List<CleanerPersonal> dummyData = [

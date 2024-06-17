@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 
-class NewsPage extends StatefulWidget {
-  const NewsPage({super.key});
+class NewsUserPage extends StatefulWidget {
+  const NewsUserPage({super.key});
   @override
-  State<NewsPage> createState() => _NewsPage();
+  State<NewsUserPage> createState() => _NewsUserPageState();
 }
 
-class _NewsPage extends State<NewsPage> {
+class _NewsUserPageState extends State<NewsUserPage> {
   late Color myColor;
   late Size mediaSize;
 

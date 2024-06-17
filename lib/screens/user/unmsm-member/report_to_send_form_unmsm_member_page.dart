@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/detail_report_pre_confirm_page.dart';
+import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/report_to_send_detail_unmsm_member_page.dart';
 import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/format_text_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
@@ -13,14 +13,16 @@ import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
-class NewReportFormPage extends StatefulWidget {
-  const NewReportFormPage({super.key});
+class ReportToSendFormUnmsmMemberPage extends StatefulWidget {
+  const ReportToSendFormUnmsmMemberPage({super.key});
 
   @override
-  State<NewReportFormPage> createState() => _NewReportFormPageState();
+  State<ReportToSendFormUnmsmMemberPage> createState() =>
+      _ReportToSendFormUnmsmMemberPageState();
 }
 
-class _NewReportFormPageState extends State<NewReportFormPage> {
+class _ReportToSendFormUnmsmMemberPageState
+    extends State<ReportToSendFormUnmsmMemberPage> {
   late Color myColor;
   late Size mediaSize;
   String _locationMessage = "";
@@ -249,7 +251,7 @@ class _NewReportFormPageState extends State<NewReportFormPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DetailReportPreConfirmPage(
+                  builder: (context) => ReportToSendDetailUnmsmMemberPage(
                         formData: formData,
                         dateTime: FormatTextUtil.formatDateTime(DateTime.now()),
                         image: _image!,
