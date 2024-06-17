@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:g5_mb_campus_cleaner/global/env.dart';
 import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/report_history_unmsm_member_page.dart';
 import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/report_to_send_form_unmsm_member_page.dart';
 import 'package:g5_mb_campus_cleaner/screens/admin/news_admin_page.dart';
@@ -34,55 +35,65 @@ class AppNavigationBarWidget extends StatelessWidget {
       items: buildItems(userTypeIndex),
       onTap: (int index) {
         switch (userTypeIndex) {
-          case 0:
+          case Environment.unmsmMemberIndex:
             switch (index) {
               case 0:
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            const ReportToSendFormUnmsmMemberPage()));
+                        builder: (context) => ReportToSendFormUnmsmMemberPage(
+                            userTypeIndex: userTypeIndex,
+                            currentIndex: index)));
               case 1:
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            const ReportHistoryUnmsmMemberPage()));
+                        builder: (context) => ReportHistoryUnmsmMemberPage(
+                            userTypeIndex: userTypeIndex,
+                            currentIndex: index)));
               case 2:
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const NewsUserPage()));
+                        builder: (context) => NewsUserPage(
+                            userTypeIndex: userTypeIndex,
+                            currentIndex: index)));
             }
             break;
-          case 1:
+          case Environment.cleanerIndex:
             switch (index) {
               case 0:
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            const ReportToResolveListCleanerPage()));
+                        builder: (context) => ReportToResolveListCleanerPage(
+                            userTypeIndex: userTypeIndex,
+                            currentIndex: index)));
               case 1:
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const NewsUserPage()));
+                        builder: (context) => NewsUserPage(
+                            userTypeIndex: userTypeIndex,
+                            currentIndex: index)));
             }
             break;
-          case 2:
+          case Environment.adminIndex:
             switch (index) {
               case 0:
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            const ReportToAsignListAdminPage()));
+                        builder: (context) => ReportToAsignListAdminPage(
+                            userTypeIndex: userTypeIndex,
+                            currentIndex: index)));
               case 1:
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const NewsAdminPage()));
+                        builder: (context) => NewsAdminPage(
+                            currentIndex: index,
+                            userTypeIndex: userTypeIndex)));
             }
             break;
         }
@@ -91,7 +102,8 @@ class AppNavigationBarWidget extends StatelessWidget {
   }
 
   List<BottomNavigationBarItem> buildItems(int userTypeIndex) {
-    if (userTypeIndex == 1 || userTypeIndex == 2) {
+    if (userTypeIndex == Environment.cleanerIndex ||
+        userTypeIndex == Environment.adminIndex) {
       return const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home, color: Colors.white),

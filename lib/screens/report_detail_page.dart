@@ -5,6 +5,8 @@ import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/report_card_widget.dart';
 
 class ReportDetailPage extends StatefulWidget {
+  final int currentIndex;
+  final int userTypeIndex;
   final String reference;
   final String comment;
   final String dateTime;
@@ -18,7 +20,9 @@ class ReportDetailPage extends StatefulWidget {
       required this.dateTime,
       required this.image,
       required this.latitude,
-      required this.longitude});
+      required this.longitude,
+      required this.currentIndex,
+      required this.userTypeIndex});
 
   @override
   State<ReportDetailPage> createState() => _ReportDetailPageState();
@@ -33,12 +37,12 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
-    imageIsValid = false;
     return Scaffold(
       appBar: const CustomAppBarWidget(
           title: "Detalle del reporte", automaticallyImplyLeading: true),
-      bottomNavigationBar:
-          const AppNavigationBarWidget(userTypeIndex: 0, currentIndex: 0),
+      bottomNavigationBar: AppNavigationBarWidget(
+          userTypeIndex: widget.userTypeIndex,
+          currentIndex: widget.currentIndex),
       body: Scrollbar(
           child: SingleChildScrollView(
               child: Container(

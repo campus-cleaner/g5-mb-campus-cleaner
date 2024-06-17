@@ -10,7 +10,10 @@ import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 
 class ReportHistoryUnmsmMemberPage extends StatefulWidget {
-  const ReportHistoryUnmsmMemberPage({super.key});
+  final int currentIndex;
+  final int userTypeIndex;
+  const ReportHistoryUnmsmMemberPage(
+      {super.key, required this.currentIndex, required this.userTypeIndex});
   @override
   State<ReportHistoryUnmsmMemberPage> createState() =>
       _ReportHistoryUnmsmMemberPageState();
@@ -62,8 +65,9 @@ class _ReportHistoryUnmsmMemberPageState
     return Scaffold(
       appBar: const CustomAppBarWidget(
           title: "Mis reportes", automaticallyImplyLeading: false),
-      bottomNavigationBar:
-          const AppNavigationBarWidget(currentIndex: 0, userTypeIndex: 0),
+      bottomNavigationBar: AppNavigationBarWidget(
+          currentIndex: widget.currentIndex,
+          userTypeIndex: widget.userTypeIndex),
       body: Scrollbar(
           child: SingleChildScrollView(
               child: Container(
@@ -136,7 +140,10 @@ class _ReportHistoryUnmsmMemberPageState
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         ReportUtil.navigateToDetailReportPage(
-                            context, lista.elementAt(index));
+                            context: context,
+                            report: lista.elementAt(index),
+                            userTypeIndex: widget.userTypeIndex,
+                            currentIndex: widget.currentIndex);
                       },
                   )
                 ],

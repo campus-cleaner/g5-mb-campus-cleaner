@@ -9,6 +9,8 @@ import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/report_card_widget.dart';
 
 class ReportToSendDetailUnmsmMemberPage extends StatefulWidget {
+  final int currentIndex;
+  final int userTypeIndex;
   final Map<String, dynamic> formData;
   final String dateTime;
   final File image;
@@ -20,7 +22,9 @@ class ReportToSendDetailUnmsmMemberPage extends StatefulWidget {
       required this.dateTime,
       required this.image,
       required this.latitude,
-      required this.longitude});
+      required this.longitude,
+      required this.currentIndex,
+      required this.userTypeIndex});
 
   @override
   State<ReportToSendDetailUnmsmMemberPage> createState() =>
@@ -41,8 +45,9 @@ class _ReportToSendDetailUnmsmMemberPageState
     return Scaffold(
       appBar: const CustomAppBarWidget(
           title: "Detalle del reporte", automaticallyImplyLeading: true),
-      bottomNavigationBar:
-          const AppNavigationBarWidget(userTypeIndex: 0, currentIndex: 0),
+      bottomNavigationBar: AppNavigationBarWidget(
+          userTypeIndex: widget.userTypeIndex,
+          currentIndex: widget.currentIndex),
       body: Scrollbar(
           child: SingleChildScrollView(
               child: Container(
@@ -97,19 +102,23 @@ class _ReportToSendDetailUnmsmMemberPageState
       barrierDismissible: false, // El diálogo no se cierra al hacer clic fuera
       builder: (BuildContext context) {
         return imageIsValid
-            ? const AlertWidget(
+            ? AlertWidget(
                 title: "¡Enviado!",
                 description: "El reporte fue enviado correctamente.",
                 icon: "assets/images/success.svg",
                 isValid: true,
-                target: ReportToSendFormUnmsmMemberPage())
-            : const AlertWidget(
+                target: ReportToSendFormUnmsmMemberPage(
+                    userTypeIndex: widget.userTypeIndex,
+                    currentIndex: widget.currentIndex))
+            : AlertWidget(
                 title: "¡Error!",
                 description:
                     "En la foto no se identifica algún desperdicio que debe ser limpiado.",
                 icon: "assets/images/fail.svg",
                 isValid: false,
-                target: ReportToSendFormUnmsmMemberPage(),
+                target: ReportToSendFormUnmsmMemberPage(
+                    userTypeIndex: widget.userTypeIndex,
+                    currentIndex: widget.currentIndex),
               );
       },
     );

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:g5_mb_campus_cleaner/screens/campus_app_navigation_bar.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
-import 'package:g5_mb_campus_cleaner/screens/log_in_page.dart';
+import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
+import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 
 class NewsAdminPage extends StatefulWidget {
-  const NewsAdminPage({super.key});
+  final int currentIndex;
+  final int userTypeIndex;
+  const NewsAdminPage(
+      {super.key, required this.currentIndex, required this.userTypeIndex});
   @override
   State<NewsAdminPage> createState() => _NewsAdminPageState();
 }
@@ -22,99 +24,23 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Noticias Admin',
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        backgroundColor: const Color.fromARGB(255, 31, 172, 90),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 31, 172, 90),
-              ),
-              accountName: Text(
-                "Usuario XYZ",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              accountEmail: Text(
-                "marco.mezaCancho@unmsm.edu.pe",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              currentAccountPicture: CircleAvatar(
-                radius: 60.0,
-                backgroundImage: NetworkImage(
-                    "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
-              ), //For Image Asset
+      appBar: const CustomAppBarWidget(
+          title: "Noticias", automaticallyImplyLeading: false),
+      bottomNavigationBar: AppNavigationBarWidget(
+          currentIndex: widget.currentIndex,
+          userTypeIndex: widget.userTypeIndex),
+      body: Scrollbar(
+        child: SingleChildScrollView(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+              image: DecorationImage(
+                  image: AssetImage("assets/images/bg_2.png"),
+                  fit: BoxFit.cover),
             ),
-            ExpansionTile(
-              leading: const Icon(Icons.flag),
-              title: const Text("Incidencias"),
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.receipt_long),
-                  title: const Text('Historial de Incidencias'),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const ReportToResolveListCleanerPage(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            ListTile(
-              leading: const Icon(Icons.power_settings_new),
-              title: const Text('Cerrar sesión'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LogInPage()),
-                );
-              },
-            )
-          ],
-        ),
-      ),
-      bottomNavigationBar: CampusNavigationBar.buildNav(context),
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
-          image: DecorationImage(
-              image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
-        ),
-        child: Stack(children: [
-          Positioned(top: 30, child: _buildTop()),
-          Positioned(bottom: 20, child: _buildList()),
-        ]),
-      ),
-    );
-  }
-
-  Widget _buildTop() {
-    return SizedBox(
-      width: mediaSize.width,
-      height: 70,
-      child: const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "Noticias",
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Quicksand',
-                fontSize: 40,
-                letterSpacing: 2),
+            child: _buildList(),
           ),
-        ],
+        ),
       ),
     );
   }

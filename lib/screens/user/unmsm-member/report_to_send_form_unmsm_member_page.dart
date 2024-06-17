@@ -14,7 +14,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ReportToSendFormUnmsmMemberPage extends StatefulWidget {
-  const ReportToSendFormUnmsmMemberPage({super.key});
+  final int currentIndex;
+  final int userTypeIndex;
+  const ReportToSendFormUnmsmMemberPage(
+      {super.key, required this.currentIndex, required this.userTypeIndex});
 
   @override
   State<ReportToSendFormUnmsmMemberPage> createState() =>
@@ -97,8 +100,9 @@ class _ReportToSendFormUnmsmMemberPageState
     return Scaffold(
       appBar: const CustomAppBarWidget(
           title: "Reportar cúmulo de basura", automaticallyImplyLeading: false),
-      bottomNavigationBar:
-          const AppNavigationBarWidget(currentIndex: 0, userTypeIndex: 0),
+      bottomNavigationBar: AppNavigationBarWidget(
+          currentIndex: widget.currentIndex,
+          userTypeIndex: widget.userTypeIndex),
       body: Scrollbar(
           child: SingleChildScrollView(
               child: Container(
@@ -252,6 +256,8 @@ class _ReportToSendFormUnmsmMemberPageState
               context,
               MaterialPageRoute(
                   builder: (context) => ReportToSendDetailUnmsmMemberPage(
+                        userTypeIndex: widget.userTypeIndex,
+                        currentIndex: widget.currentIndex,
                         formData: formData,
                         dateTime: FormatTextUtil.formatDateTime(DateTime.now()),
                         image: _image!,

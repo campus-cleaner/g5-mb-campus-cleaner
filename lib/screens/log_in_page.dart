@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:g5_mb_campus_cleaner/global/env.dart';
 import 'package:g5_mb_campus_cleaner/services/login_service.dart';
 import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
 import 'package:g5_mb_campus_cleaner/screens/admin/report_to_asign_list_admin_page.dart';
@@ -156,20 +157,25 @@ class _LogInPageState extends State<LogInPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const ReportToAsignListAdminPage()),
+                    builder: (context) => const ReportToAsignListAdminPage(
+                        userTypeIndex: Environment.adminIndex,
+                        currentIndex: 0)),
               );
             } else if (response.rol == 'CLEANER') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        const ReportToResolveListCleanerPage()),
+                    builder: (context) => const ReportToResolveListCleanerPage(
+                        userTypeIndex: Environment.cleanerIndex,
+                        currentIndex: 0)),
               );
             } else {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const WelcomeUnmsmMemberPage()),
+                    builder: (context) => const WelcomeUnmsmMemberPage(
+                        userTypeIndex: Environment.unmsmMemberIndex,
+                        currentIndex: 0)),
               );
             }
           }

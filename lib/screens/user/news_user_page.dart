@@ -3,7 +3,10 @@ import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 
 class NewsUserPage extends StatefulWidget {
-  const NewsUserPage({super.key});
+  final int currentIndex;
+  final int userTypeIndex;
+  const NewsUserPage(
+      {super.key, required this.currentIndex, required this.userTypeIndex});
   @override
   State<NewsUserPage> createState() => _NewsUserPageState();
 }
@@ -19,8 +22,9 @@ class _NewsUserPageState extends State<NewsUserPage> {
     return Scaffold(
       appBar: const CustomAppBarWidget(
           title: "Noticias", automaticallyImplyLeading: false),
-      bottomNavigationBar:
-          const AppNavigationBarWidget(currentIndex: 0, userTypeIndex: 0),
+      bottomNavigationBar: AppNavigationBarWidget(
+          currentIndex: widget.currentIndex,
+          userTypeIndex: widget.userTypeIndex),
       body: Scrollbar(
         child: SingleChildScrollView(
           child: Container(

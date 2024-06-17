@@ -4,7 +4,10 @@ import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 
 class WelcomeUnmsmMemberPage extends StatefulWidget {
-  const WelcomeUnmsmMemberPage({super.key});
+  final int currentIndex;
+  final int userTypeIndex;
+  const WelcomeUnmsmMemberPage(
+      {super.key, required this.currentIndex, required this.userTypeIndex});
 
   @override
   State<WelcomeUnmsmMemberPage> createState() => _WelcomeUnmsmMemberPageState();
@@ -61,7 +64,9 @@ class _WelcomeUnmsmMemberPageState extends State<WelcomeUnmsmMemberPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const ReportToSendFormUnmsmMemberPage()),
+                builder: (context) => ReportToSendFormUnmsmMemberPage(
+                    userTypeIndex: widget.userTypeIndex,
+                    currentIndex: widget.currentIndex)),
           );
         },
         style: ButtonUtil.buildGreenButton(),

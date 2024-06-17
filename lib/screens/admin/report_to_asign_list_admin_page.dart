@@ -7,12 +7,15 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/models/users_combo.dart';
 import 'package:g5_mb_campus_cleaner/services/reports_service.dart';
-import 'package:g5_mb_campus_cleaner/screens/campus_app_navigation_bar.dart';
-import 'package:g5_mb_campus_cleaner/screens/log_in_page.dart';
 import 'package:g5_mb_campus_cleaner/utils/report_util.dart';
+import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
+import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 
 class ReportToAsignListAdminPage extends StatefulWidget {
-  const ReportToAsignListAdminPage({super.key});
+  final int currentIndex;
+  final int userTypeIndex;
+  const ReportToAsignListAdminPage(
+      {super.key, required this.currentIndex, required this.userTypeIndex});
   @override
   State<ReportToAsignListAdminPage> createState() =>
       _ReportToAsignListAdminPageState();
@@ -56,104 +59,26 @@ class _ReportToAsignListAdminPageState
 
   @override
   Widget build(BuildContext context) {
-    _fbKey.currentState?.fields['responsible']!
-        .setValue(usuariosCleaners[0].id);
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Reportes Pendientes',
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        backgroundColor: const Color.fromARGB(255, 31, 172, 90),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 31, 172, 90),
-              ),
-              accountName: Text(
-                "Usuario XYZ",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              accountEmail: Text(
-                "marco.mezaCancho@unmsm.edu.pe",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              currentAccountPicture: CircleAvatar(
-                radius: 60.0,
-                backgroundImage: NetworkImage(
-                    "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
-              ), //For Image Asset
-            ),
-            ExpansionTile(
-              leading: const Icon(Icons.flag),
-              title: const Text("Incidencias"),
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.receipt_long),
-                  title: const Text('Historial de Incidencias'),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ReportToAsignListAdminPage(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            ListTile(
-              leading: const Icon(Icons.power_settings_new),
-              title: const Text('Cerrar sesión'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LogInPage()),
-                );
-              },
-            )
-          ],
-        ),
-      ),
-      bottomNavigationBar: CampusNavigationBar.buildNav(context),
-      body: Container(
+      appBar: const CustomAppBarWidget(
+          title: "Mis reportes", automaticallyImplyLeading: false),
+      bottomNavigationBar: AppNavigationBarWidget(
+          currentIndex: widget.currentIndex,
+          userTypeIndex: widget.userTypeIndex),
+      body: Scrollbar(
+          child: SingleChildScrollView(
+              child: Container(
         decoration: const BoxDecoration(
           color: Colors.transparent,
           image: DecorationImage(
               image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
         ),
-        child: Stack(children: [
-          Positioned(top: 30, child: _buildTop()),
-          Positioned(bottom: 20, child: _buildList()),
-        ]),
-      ),
-    );
-  }
-
-  Widget _buildTop() {
-    return SizedBox(
-      width: mediaSize.width,
-      height: 70,
-      child: const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "Pendientes",
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Quicksand',
-                fontSize: 40,
-                letterSpacing: 2),
-          ),
-        ],
-      ),
+        child: Column(
+          children: [_buildList()],
+        ),
+      ))),
     );
   }
 
@@ -278,7 +203,10 @@ class _ReportToAsignListAdminPageState
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         ReportUtil.navigateToDetailReportPage(
-                            context, lista.elementAt(index));
+                            context: context,
+                            report: lista.elementAt(index),
+                            userTypeIndex: widget.userTypeIndex,
+                            currentIndex: widget.currentIndex);
                       },
                   )
                 ],
@@ -384,7 +312,11 @@ class _ReportToAsignListAdminPageState
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              ReportToAsignListAdminPage()),
+                                              ReportToAsignListAdminPage(
+                                                  userTypeIndex:
+                                                      widget.userTypeIndex,
+                                                  currentIndex:
+                                                      widget.currentIndex)),
                                     );
                                   }
                                 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:g5_mb_campus_cleaner/global/env.dart';
 import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
 import 'package:g5_mb_campus_cleaner/screens/admin/report_to_asign_list_admin_page.dart';
 import 'package:g5_mb_campus_cleaner/screens/log_in_page.dart';
@@ -197,12 +198,15 @@ class _SignUpUnmsmMemberPageState extends State<SignUpUnmsmMemberPage> {
             await prefs.setString('token', response.token);
             if (!mounted) return;
             if (response.rol == 'ADMIN') {
-              target = const ReportToAsignListAdminPage();
+              target = const ReportToAsignListAdminPage(
+                  userTypeIndex: Environment.adminIndex, currentIndex: 0);
             } else if (response.rol == 'CLEANER') {
-              target = const ReportToResolveListCleanerPage();
+              target = const ReportToResolveListCleanerPage(
+                  userTypeIndex: Environment.cleanerIndex, currentIndex: 0);
               return;
             } else {
-              target = const WelcomeUnmsmMemberPage();
+              target = const WelcomeUnmsmMemberPage(
+                  userTypeIndex: Environment.unmsmMemberIndex, currentIndex: 0);
             }
             showDialog(
               context: context,
