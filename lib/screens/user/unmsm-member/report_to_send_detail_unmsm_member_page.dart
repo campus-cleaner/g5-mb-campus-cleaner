@@ -39,12 +39,21 @@ class _ReportToSendDetailUnmsmMemberPageState
   late Size mediaSize;
   late bool imageIsValid;
   late bool somethingHasGoneWrong;
+  late bool isSending;
   late String? savedFilePath;
+
+  @override
+  void initState() {
+    super.initState();
+    isSending = false;
+  }
 
   @override
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
+    somethingHasGoneWrong = false;
+    imageIsValid = false;
     return Scaffold(
       appBar: const CustomAppBarWidget(
           title: "Detalle del reporte", automaticallyImplyLeading: true),
@@ -66,12 +75,29 @@ class _ReportToSendDetailUnmsmMemberPageState
 
   Widget _buildBottom() {
     return ElevatedButton(
-        onPressed: () {
-          _validateImage();
-          _showMyDialog(context);
-        },
-        style: ButtonUtil.buildGreenButton(),
-        child: TextUtil.buildBoldText("ENVIAR", color: Colors.white));
+      onPressed: isSending
+          ? null
+          : () async {
+              setState(() {
+                isSending = true; // Cambiar a true cuando se inicie el envío
+              });
+              await _validateImage();
+              if (mounted) {
+                _showMyDialog(context);
+              }
+            },
+      style: ButtonUtil.buildGreenButton(),
+      child: isSending
+          ? const SizedBox(
+              width: 24.0,
+              height: 24.0,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                strokeWidth: 3.0,
+              ),
+            )
+          : TextUtil.buildBoldText("ENVIAR", color: Colors.white),
+    );
   }
 
   Widget _buildContent() {
@@ -93,26 +119,27 @@ class _ReportToSendDetailUnmsmMemberPageState
     );
   }
 
-  void _validateImage() async {
+  Future<void> _validateImage() async {
     final service = ReportService();
     final validationResponse = await service.reportImage(widget.image);
-    setState(() async {
-      LoggerUtil.logInfo(validationResponse.message!);
-      if (validationResponse.code == "200") {
-        imageIsValid = true;
-        savedFilePath = validationResponse.data;
-        final savingResponse = await service.registerReport(
-            savedFilePath!,
-            widget.formData['reference'],
-            widget.formData['comment'],
-            widget.latitude,
-            widget.longitude,
-            widget.dateTime);
-        somethingHasGoneWrong = savingResponse.code != "200";
-      } else {
-        imageIsValid = false;
-        somethingHasGoneWrong = validationResponse.code != "400";
-      }
+    LoggerUtil.logInfo(validationResponse.message!);
+    if (validationResponse.code == "200") {
+      imageIsValid = true;
+      savedFilePath = validationResponse.data;
+      final savingResponse = await service.registerReport(
+          savedFilePath!,
+          widget.formData['reference'],
+          widget.formData['comment'],
+          widget.latitude,
+          widget.longitude,
+          widget.dateTime);
+      somethingHasGoneWrong = savingResponse.code != "200";
+    } else {
+      imageIsValid = false;
+      somethingHasGoneWrong = validationResponse.code != "400";
+    }
+    setState(() {
+      isSending = false;
     });
   }
 
