@@ -1,10 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/models/users_combo.dart';
 import 'package:g5_mb_campus_cleaner/services/reports_service.dart';
-import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_detail_cleaner_page.dart';
+import 'package:g5_mb_campus_cleaner/utils/format_text_util.dart';
+import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
+import 'package:g5_mb_campus_cleaner/utils/report_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 
@@ -20,12 +21,23 @@ class ReportToResolveListCleanerPage extends StatefulWidget {
 
 class _ReportToResolveListCleanerPageState
     extends State<ReportToResolveListCleanerPage> {
-  final _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
 
   List<UserCombo> usuariosCleaners = [];
-  List<PendingReport> lista = [];
+  List<PendingReport> lista = [
+    PendingReport(
+        id: 0,
+        reference: "Huaca",
+        imageRoute: "./.",
+        latitude: 5.8,
+        longitude: 6.0,
+        comment: "dffs",
+        userRegister: "Nicole Morales",
+        idUserRegister: 1,
+        status: "Resuelto",
+        dateReport: FormatTextUtil.formatDateTime(DateTime.now()))
+  ];
   @override
   void initState() {
     super.initState();
@@ -37,7 +49,7 @@ class _ReportToResolveListCleanerPageState
     final service = ReportService();
     final response = await service.getReportsToAttend();
     setState(() {
-      lista = response;
+      //lista = response;
     });
   }
 
@@ -55,7 +67,7 @@ class _ReportToResolveListCleanerPageState
     mediaSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: const CustomAppBarWidget(
-          title: "Mis reportes", automaticallyImplyLeading: false),
+          title: "Reportes pendientes", automaticallyImplyLeading: false),
       bottomNavigationBar: AppNavigationBarWidget(
           currentIndex: widget.currentIndex,
           userTypeIndex: widget.userTypeIndex),
@@ -77,52 +89,42 @@ class _ReportToResolveListCleanerPageState
   Widget _buildList() {
     return SizedBox(
         width: mediaSize.width,
-        height: 700,
         child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Card(
-            color: Colors.white,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            )),
-            child: Column(
-              children: [
-                Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Pendientes",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Quicksand'),
-                        ),
-                      ],
-                    )),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: _buildPendings(),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
-        ));
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+                child: SizedBox(
+                    height: 700,
+                    child: Card(
+                        color: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
+                        child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextUtil.buildBoldText("Pendientes"),
+                                    TextUtil.buildBoldText("Hora")
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Expanded(
+                                  child: _buildPendings(),
+                                ),
+                              ],
+                            )))))));
   }
 
   Widget _buildPendingElement(int index) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -133,27 +135,26 @@ class _ReportToResolveListCleanerPageState
                     child: Icon(Icons.delete, size: 20),
                   ),
                   TextSpan(
-                    text: "Registro Pendiente: ${this.lista[index].reference}",
+                    text:
+                        "Reporte pendiente: ${lista.elementAt(index).reference}",
                     style: const TextStyle(
-                      color: Colors.black,
-                    ),
+                        color: Colors.black,
+                        fontFamily: 'Quicksand',
+                        fontSize: 15),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ReportToResolveDetailCleanerPage(
-                                      userTypeIndex: widget.userTypeIndex,
-                                      currentIndex: widget.currentIndex)),
-                        );
+                        ReportUtil.navigateToReportToResolveDetailCleanerPage(
+                            context: context,
+                            report: lista.elementAt(index),
+                            userTypeIndex: widget.userTypeIndex,
+                            currentIndex: widget.currentIndex);
                       },
                   )
                 ],
               ),
             ),
           ),
-          Text(this.lista[index].dateReport!),
+          TextUtil.buildBlackText(lista.elementAt(index).dateReport!)
         ],
       ),
     );

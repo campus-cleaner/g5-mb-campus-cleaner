@@ -43,7 +43,7 @@ class _NewsUserPageState extends State<NewsUserPage> {
 
   Widget _buildElement() {
     return AspectRatio(
-      aspectRatio: 16 / 9, // Proporción deseada (ancho / alto)
+      aspectRatio: 16 / 9,
       child: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -86,9 +86,8 @@ class _NewsUserPageState extends State<NewsUserPage> {
 
   Widget _buildPendings() {
     return ListView.builder(
-      physics:
-          const NeverScrollableScrollPhysics(), // Desactiva el desplazamiento para que el padre controle el desplazamiento
-      shrinkWrap: true, // Ajusta el tamaño según el contenido
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       itemCount: 3,
       itemBuilder: (context, position) {
         return Padding(

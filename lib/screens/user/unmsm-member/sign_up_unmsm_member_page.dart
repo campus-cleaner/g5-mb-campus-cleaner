@@ -6,12 +6,12 @@ import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list
 import 'package:g5_mb_campus_cleaner/screens/admin/report_to_asign_list_admin_page.dart';
 import 'package:g5_mb_campus_cleaner/screens/log_in_page.dart';
 import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/welcome_unmsm_member_page.dart';
+import 'package:g5_mb_campus_cleaner/services/login_service.dart';
 import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/alert_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/login_background_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../services/login_service.dart';
 
 class SignUpUnmsmMemberPage extends StatefulWidget {
   const SignUpUnmsmMemberPage({super.key});
@@ -196,6 +196,7 @@ class _SignUpUnmsmMemberPageState extends State<SignUpUnmsmMemberPage> {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             late Widget target;
             await prefs.setString('token', response.token);
+            await prefs.setString('username', username);
             if (!mounted) return;
             if (response.rol == 'ADMIN') {
               target = const ReportToAsignListAdminPage(

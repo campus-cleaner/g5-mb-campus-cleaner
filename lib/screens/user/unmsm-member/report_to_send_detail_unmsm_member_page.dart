@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/screens/user/unmsm-member/report_to_send_form_unmsm_member_page.dart';
+import 'package:g5_mb_campus_cleaner/services/reports_service.dart';
 import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
+import 'package:g5_mb_campus_cleaner/utils/logger_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/alert_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
@@ -36,12 +38,13 @@ class _ReportToSendDetailUnmsmMemberPageState
   late Color myColor;
   late Size mediaSize;
   late bool imageIsValid;
+  late bool somethingHasGoneWrong;
+  late String? savedFilePath;
 
   @override
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
-    imageIsValid = false;
     return Scaffold(
       appBar: const CustomAppBarWidget(
           title: "Detalle del reporte", automaticallyImplyLeading: true),
@@ -90,36 +93,63 @@ class _ReportToSendDetailUnmsmMemberPageState
     );
   }
 
-  void _validateImage() {
-    // Aquí va la lógica de validación de la imagen
-    // Por ejemplo, establecer imageIsValid a true o false según el resultado de la validación
-    // imageIsValid = true; // ejemplo de resultado de validación
+  void _validateImage() async {
+    final service = ReportService();
+    final validationResponse = await service.reportImage(widget.image);
+    setState(() async {
+      LoggerUtil.logInfo(validationResponse.message!);
+      if (validationResponse.code == "200") {
+        imageIsValid = true;
+        savedFilePath = validationResponse.data;
+        final savingResponse = await service.registerReport(
+            savedFilePath!,
+            widget.formData['reference'],
+            widget.formData['comment'],
+            widget.latitude,
+            widget.longitude,
+            widget.dateTime);
+        somethingHasGoneWrong = savingResponse.code != "200";
+      } else {
+        imageIsValid = false;
+        somethingHasGoneWrong = validationResponse.code != "400";
+      }
+    });
   }
 
   Future<void> _showMyDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // El diálogo no se cierra al hacer clic fuera
+      barrierDismissible: false,
       builder: (BuildContext context) {
-        return imageIsValid
+        return somethingHasGoneWrong
             ? AlertWidget(
-                title: "¡Enviado!",
-                description: "El reporte fue enviado correctamente.",
-                icon: "assets/images/success.svg",
-                isValid: true,
-                target: ReportToSendFormUnmsmMemberPage(
-                    userTypeIndex: widget.userTypeIndex,
-                    currentIndex: widget.currentIndex))
-            : AlertWidget(
                 title: "¡Error!",
-                description:
-                    "En la foto no se identifica algún desperdicio que debe ser limpiado.",
+                description: "No se ha podido podido procesar su reporte.",
                 icon: "assets/images/fail.svg",
                 isValid: false,
                 target: ReportToSendFormUnmsmMemberPage(
                     userTypeIndex: widget.userTypeIndex,
                     currentIndex: widget.currentIndex),
-              );
+              )
+            : imageIsValid
+                ? AlertWidget(
+                    title: "¡Enviado!",
+                    description: "El reporte fue enviado correctamente.",
+                    icon: "assets/images/success.svg",
+                    isValid: true,
+                    target: ReportToSendFormUnmsmMemberPage(
+                        userTypeIndex: widget.userTypeIndex,
+                        currentIndex: widget.currentIndex))
+                : AlertWidget(
+                    title: "¡Error!",
+                    description:
+                        "En la foto no se identifica algún desperdicio que debe ser limpiado.",
+                    icon: "assets/images/fail.svg",
+                    isValid: false,
+                    target: ReportToSendFormUnmsmMemberPage(
+                        userTypeIndex: widget.userTypeIndex,
+                        currentIndex: widget.currentIndex),
+                  );
       },
     );
   }

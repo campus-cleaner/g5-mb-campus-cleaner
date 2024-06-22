@@ -1,9 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:g5_mb_campus_cleaner/models/cleaner_person.dart';
 import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/services/reports_service.dart';
-import 'package:g5_mb_campus_cleaner/utils/format_text_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/report_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
@@ -23,26 +21,7 @@ class _ReportHistoryUnmsmMemberPageState
     extends State<ReportHistoryUnmsmMemberPage> {
   late Color myColor;
   late Size mediaSize;
-  List<CleanerPersonal> dummyData = [
-    CleanerPersonal(id: 1, label: 'Alice'),
-    CleanerPersonal(id: 2, label: 'Bob'),
-    CleanerPersonal(id: 3, label: 'Charlie'),
-    CleanerPersonal(id: 4, label: 'David'),
-    CleanerPersonal(id: 5, label: 'Eve'),
-  ];
-  List<PendingReport> lista = [
-    PendingReport(
-        id: 0,
-        reference: "Huaca",
-        imageRoute: "./.",
-        latitude: 5.8,
-        longitude: 6.0,
-        comment: "dffs",
-        userRegister: "Nicole Morales",
-        idUserRegister: 1,
-        status: "En progreso",
-        dateReport: FormatTextUtil.formatDateTime(DateTime.now()))
-  ];
+  List<PendingReport> lista = [];
 
   @override
   void initState() {
@@ -54,7 +33,7 @@ class _ReportHistoryUnmsmMemberPageState
     final service = ReportService();
     final response = await service.getMyReports();
     setState(() {
-      //lista = response;
+      lista = response;
     });
   }
 
@@ -139,7 +118,7 @@ class _ReportHistoryUnmsmMemberPageState
                         fontSize: 15),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        ReportUtil.navigateToDetailReportPage(
+                        ReportUtil.navigateToReportDetailPage(
                             context: context,
                             report: lista.elementAt(index),
                             userTypeIndex: widget.userTypeIndex,

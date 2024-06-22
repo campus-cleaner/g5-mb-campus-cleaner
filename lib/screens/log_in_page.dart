@@ -152,6 +152,7 @@ class _LogInPageState extends State<LogInPage> {
               return;
             }
             await prefs.setString('token', response.token);
+            await prefs.setString('username', user);
             if (!mounted) return;
             if (response.rol == 'ADMIN') {
               Navigator.push(

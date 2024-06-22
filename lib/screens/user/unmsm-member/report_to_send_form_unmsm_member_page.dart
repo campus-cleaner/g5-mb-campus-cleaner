@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -12,6 +11,7 @@ import 'package:g5_mb_campus_cleaner/widgets/camera_button_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ReportToSendFormUnmsmMemberPage extends StatefulWidget {
   final int currentIndex;
@@ -28,9 +28,8 @@ class _ReportToSendFormUnmsmMemberPageState
     extends State<ReportToSendFormUnmsmMemberPage> {
   late Color myColor;
   late Size mediaSize;
-  String _locationMessage = "";
-  double _latitude = 0;
-  double _longitude = 0;
+  double? _latitude;
+  double? _longitude;
   final _fbKey = GlobalKey<FormBuilderState>();
   File? _image;
 
@@ -46,9 +45,6 @@ class _ReportToSendFormUnmsmMemberPageState
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      setState(() {
-        _locationMessage = "Los servicios de ubicación están deshabilitados.";
-      });
       return;
     }
 
@@ -56,40 +52,71 @@ class _ReportToSendFormUnmsmMemberPageState
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        setState(() {
-          _locationMessage = "Los permisos de ubicación fueron denegados";
-        });
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      setState(() {
-        _locationMessage =
-            "Los permisos de ubicación fueron denegados permanentemente.";
-      });
       return;
     }
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      _locationMessage =
-          "Latitud: ${position.latitude}, Longitud: ${position.longitude}";
-      _latitude = position.latitude;
-      _longitude = position.longitude;
-    });
+    if (mounted) {
+      setState(() {
+        _latitude = position.latitude;
+        _longitude = position.longitude;
+      });
+    }
+  }
+
+  Future<void> _requestCameraPermission() async {
+    final status = await Permission.camera.request();
+
+    if (status.isGranted) {
+      _openCamera();
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings();
+    }
   }
 
   Future<void> _openCamera() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
-    if (pickedFile != null) {
+    if (pickedFile != null && mounted) {
       setState(() {
         _image = File(pickedFile.path);
         _fbKey.currentState?.fields['image']?.didChange(_image?.path);
       });
+    }
+  }
+
+  Future<void> _requestLocationAndSubmit() async {
+    await _getCurrentLocation();
+    if (_latitude != 0 && _longitude != 0) {
+      if (_image == null) {
+        await _requestCameraPermission();
+      }
+
+      if (_image != null && (_fbKey.currentState?.saveAndValidate() ?? false)) {
+        final formData = _fbKey.currentState!.value;
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ReportToSendDetailUnmsmMemberPage(
+                      userTypeIndex: widget.userTypeIndex,
+                      currentIndex: widget.currentIndex,
+                      formData: formData,
+                      dateTime: FormatTextUtil.formatDateTime(DateTime.now()),
+                      image: _image!,
+                      latitude: _latitude!,
+                      longitude: _longitude!,
+                    )),
+          );
+        }
+      }
     }
   }
 
@@ -185,18 +212,16 @@ class _ReportToSendFormUnmsmMemberPageState
                 const SizedBox(height: 20),
                 CameraButtonWidget(
                     imagePath: "assets/images/camera-icon.png",
-                    onPressed: _openCamera),
+                    onPressed: _requestCameraPermission),
                 const SizedBox(height: 20),
                 _image == null
                     ? TextUtil.buildBlackText(
                         "No se ha tomado foto del cúmulo.")
                     : SizedBox(
-                        width:
-                            double.infinity, // Ocupa todo el ancho disponible
+                        width: double.infinity,
                         child: Image.file(
                           _image!,
-                          fit: BoxFit
-                              .cover, // Ajusta la imagen para cubrir todo el ancho del contenedor
+                          fit: BoxFit.cover,
                         ),
                       ),
               ]),
@@ -248,23 +273,33 @@ class _ReportToSendFormUnmsmMemberPageState
 
   Widget _buildSendButton() {
     return ElevatedButton(
-        onPressed: () {
-          debugPrint(_fbKey.currentState?.value.toString());
-          if (_fbKey.currentState?.saveAndValidate() ?? false) {
-            final formData = _fbKey.currentState!.value;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ReportToSendDetailUnmsmMemberPage(
-                        userTypeIndex: widget.userTypeIndex,
-                        currentIndex: widget.currentIndex,
-                        formData: formData,
-                        dateTime: FormatTextUtil.formatDateTime(DateTime.now()),
-                        image: _image!,
-                        latitude: _latitude,
-                        longitude: _longitude,
-                      )),
-            );
+        onPressed: () async {
+          bool? validation = _fbKey.currentState?.saveAndValidate();
+          if (_latitude == null || _longitude == null) {
+            await _requestLocationAndSubmit();
+          } else {
+            if (_image == null) {
+              await _requestCameraPermission();
+            }
+            if (_image != null && (validation ?? false)) {
+              final formData = _fbKey.currentState!.value;
+              if (mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ReportToSendDetailUnmsmMemberPage(
+                            userTypeIndex: widget.userTypeIndex,
+                            currentIndex: widget.currentIndex,
+                            formData: formData,
+                            dateTime:
+                                FormatTextUtil.formatDateTime(DateTime.now()),
+                            image: _image!,
+                            latitude: _latitude!,
+                            longitude: _longitude!,
+                          )),
+                );
+              }
+            }
           }
         },
         style: ButtonUtil.buildGreenButton(),

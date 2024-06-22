@@ -202,7 +202,7 @@ class _ReportToAsignListAdminPageState
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        ReportUtil.navigateToDetailReportPage(
+                        ReportUtil.navigateToReportDetailPage(
                             context: context,
                             report: lista.elementAt(index),
                             userTypeIndex: widget.userTypeIndex,
