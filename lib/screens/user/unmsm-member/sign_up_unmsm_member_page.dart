@@ -24,6 +24,7 @@ class _SignUpUnmsmMemberPageState extends State<SignUpUnmsmMemberPage> {
   late Size mediaSize;
   bool viewFirstPassword = false;
   bool viewSecondPassword = false;
+  bool isLoading = false;
   final _fbKey = GlobalKey<FormBuilderState>();
   final loginService = LoginService();
 
@@ -163,70 +164,89 @@ class _SignUpUnmsmMemberPageState extends State<SignUpUnmsmMemberPage> {
 
   Widget _buildSignUpButton() {
     return ElevatedButton(
-        onPressed: () async {
-          if (_fbKey.currentState?.saveAndValidate() ?? false) {
-            debugPrint(_fbKey.currentState?.value.toString());
-            final username = _fbKey.currentState?.fields["email"]?.value;
-            final email = _fbKey.currentState?.fields["email"]?.value;
-            final fullname = _fbKey.currentState?.fields["name"]?.value;
-            final password = _fbKey.currentState?.fields["password"]?.value;
-            final phone = _fbKey.currentState?.fields["cellphone"]?.value;
-            var response = await loginService.signUp(
-                username: username,
-                password: password,
-                tokenDevice: null,
-                email: email,
-                fullname: fullname,
-                phone: phone);
-            if (!mounted) return;
-            if (response == null) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return const AlertWidget(
-                      title: "¡Error!",
-                      description: "El usuario no ha podido registrarse.",
-                      icon: "assets/images/fail.svg",
-                      isValid: false);
-                },
-              );
-              return;
-            }
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            late Widget target;
-            await prefs.setString('token', response.token);
-            await prefs.setString('username', username);
-            if (!mounted) return;
-            if (response.rol == 'ADMIN') {
-              target = const ReportToAsignListAdminPage(
-                  userTypeIndex: Environment.adminIndex, currentIndex: 0);
-            } else if (response.rol == 'CLEANER') {
-              target = const ReportToResolveListCleanerPage(
-                  userTypeIndex: Environment.cleanerIndex, currentIndex: 0);
-              return;
-            } else {
-              target = const WelcomeUnmsmMemberPage(
-                  userTypeIndex: Environment.unmsmMemberIndex, currentIndex: 0);
-            }
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return AlertWidget(
-                  title: "¡Registrado!",
-                  description: "El usuario fue registrado correctamente.",
-                  icon: "assets/images/success.svg",
-                  isValid: true,
-                  target: target,
-                );
+        onPressed: isLoading
+            ? null
+            : () async {
+                setState(() {
+                  isLoading = true;
+                });
+                if (_fbKey.currentState?.saveAndValidate() ?? false) {
+                  debugPrint(_fbKey.currentState?.value.toString());
+                  final username = _fbKey.currentState?.fields["email"]?.value;
+                  final email = _fbKey.currentState?.fields["email"]?.value;
+                  final fullname = _fbKey.currentState?.fields["name"]?.value;
+                  final password =
+                      _fbKey.currentState?.fields["password"]?.value;
+                  final phone = _fbKey.currentState?.fields["cellphone"]?.value;
+                  var response = await loginService.signUp(
+                      username: username,
+                      password: password,
+                      tokenDevice: null,
+                      email: email,
+                      fullname: fullname,
+                      phone: phone);
+                  if (!mounted) return;
+                  if (response == null) {
+                    setState(() {
+                      isLoading = false;
+                    });
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return const AlertWidget(
+                            title: "¡Error!",
+                            description: "El usuario no ha podido registrarse.",
+                            icon: "assets/images/fail.svg",
+                            isValid: false);
+                      },
+                    );
+                    return;
+                  }
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  late Widget target;
+                  await prefs.setString('token', response.token);
+                  await prefs.setString('userName', response.userName);
+                  if (!mounted) return;
+                  if (response.rol == 'ADMIN') {
+                    target = const ReportToAsignListAdminPage(
+                        userTypeIndex: Environment.adminIndex, currentIndex: 0);
+                  } else if (response.rol == 'CLEANER') {
+                    target = const ReportToResolveListCleanerPage(
+                        userTypeIndex: Environment.cleanerIndex,
+                        currentIndex: 0);
+                  } else {
+                    target = const WelcomeUnmsmMemberPage(
+                        userTypeIndex: Environment.unmsmMemberIndex,
+                        currentIndex: 0);
+                  }
+                  setState(() {
+                    isLoading = false;
+                  });
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertWidget(
+                        title: "¡Registrado!",
+                        description: "El usuario fue registrado correctamente.",
+                        icon: "assets/images/success.svg",
+                        isValid: true,
+                        target: target,
+                      );
+                    },
+                  );
+                  return;
+                }
+                setState(() {
+                  isLoading = false;
+                });
               },
-            );
-            return;
-          }
-        },
         style: ButtonUtil.buildGreenButton(),
-        child: TextUtil.buildBoldText("REGISTRARSE", color: Colors.white));
+        child: isLoading
+            ? const CircularProgressIndicator(color: Colors.white)
+            : TextUtil.buildBoldText("REGISTRARSE", color: Colors.white));
   }
 
   Widget _login() {

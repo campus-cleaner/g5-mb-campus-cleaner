@@ -14,12 +14,12 @@ class ReportUtil {
       required int currentIndex}) async {
     File imageFile = await ImageUtil.getFileFromAsset(
         "assets/images/garbage.png", "garbage.png");
-
     if (context.mounted) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ReportDetailPage(
+            userName: report.userRegister!,
             userTypeIndex: userTypeIndex,
             currentIndex: currentIndex,
             reference: report.reference!,
@@ -47,6 +47,7 @@ class ReportUtil {
         context,
         MaterialPageRoute(
           builder: (context) => ReportToResolveDetailCleanerPage(
+            userName: report.userRegister!,
             userTypeIndex: userTypeIndex,
             currentIndex: currentIndex,
             reference: report.reference!,

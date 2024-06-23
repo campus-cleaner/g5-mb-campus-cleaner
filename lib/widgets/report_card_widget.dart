@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 
 class ReportCardWidget extends StatelessWidget {
+  final String userName;
   final double latitude;
   final double longitude;
   final String dateTime;
@@ -12,6 +13,7 @@ class ReportCardWidget extends StatelessWidget {
   final String comment;
   const ReportCardWidget(
       {super.key,
+      required this.userName,
       required this.dateTime,
       required this.image,
       required this.reference,
@@ -59,7 +61,7 @@ class ReportCardWidget extends StatelessWidget {
             const SizedBox(width: 10),
             Column(
               children: [
-                TextUtil.buildBoldText("Andre Sushino", color: Colors.black),
+                TextUtil.buildBoldText(userName, color: Colors.black),
                 const SizedBox(
                   height: 5,
                 ),

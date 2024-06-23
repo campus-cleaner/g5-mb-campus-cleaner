@@ -5,6 +5,7 @@ import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/report_card_widget.dart';
 
 class ReportDetailPage extends StatefulWidget {
+  final String userName;
   final int currentIndex;
   final int userTypeIndex;
   final String reference;
@@ -15,6 +16,7 @@ class ReportDetailPage extends StatefulWidget {
   final double longitude;
   const ReportDetailPage(
       {super.key,
+      required this.userName,
       required this.reference,
       required this.comment,
       required this.dateTime,
@@ -66,6 +68,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
 
   Widget _buildTop() {
     return ReportCardWidget(
+      userName: widget.userName,
       latitude: widget.latitude,
       longitude: widget.longitude,
       dateTime: widget.dateTime,

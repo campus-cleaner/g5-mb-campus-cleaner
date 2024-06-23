@@ -10,6 +10,7 @@ import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/report_card_widget.dart';
 
 class ReportToResolveDetailCleanerPage extends StatefulWidget {
+  final String userName;
   final int currentIndex;
   final int userTypeIndex;
   final String reference;
@@ -20,6 +21,7 @@ class ReportToResolveDetailCleanerPage extends StatefulWidget {
   final double longitude;
   const ReportToResolveDetailCleanerPage(
       {super.key,
+      required this.userName,
       required this.currentIndex,
       required this.userTypeIndex,
       required this.reference,
@@ -92,6 +94,7 @@ class _ReportToResolveDetailCleanerPageState
 
   Widget _buildTop() {
     return ReportCardWidget(
+      userName: widget.userName,
       latitude: widget.latitude,
       longitude: widget.longitude,
       dateTime: widget.dateTime,

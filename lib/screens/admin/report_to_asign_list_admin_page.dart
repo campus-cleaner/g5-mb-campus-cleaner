@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -7,7 +6,9 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/models/users_combo.dart';
 import 'package:g5_mb_campus_cleaner/services/reports_service.dart';
+import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/report_util.dart';
+import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 
@@ -26,6 +27,7 @@ class _ReportToAsignListAdminPageState
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late Color myColor;
   late Size mediaSize;
+  late bool isSending;
   List<UserCombo> usuariosCleaners = [];
   List<PendingReport> lista = [];
 
@@ -34,27 +36,32 @@ class _ReportToAsignListAdminPageState
     super.initState();
     _getPendientes();
     _getCleaners();
+    isSending = false;
   }
 
   void _getCleaners() async {
     final service = ReportService();
     final response = await service.getCombo();
-    setState(() {
-      usuariosCleaners = response;
-    });
+    if (mounted) {
+      setState(() {
+        usuariosCleaners = response;
+      });
+    }
   }
 
   void _getPendientes() async {
     final service = ReportService();
     final response = await service.getReportsToAssign();
-    setState(() {
-      lista = response;
-    });
+    if (mounted) {
+      setState(() {
+        lista = response;
+      });
+    }
   }
 
   Future<void> _saveResponsible(String data) async {
     final service = ReportService();
-    final response = await service.assignResponsible(data);
+    await service.assignResponsible(data);
   }
 
   @override
@@ -76,18 +83,77 @@ class _ReportToAsignListAdminPageState
               image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
         ),
         child: Column(
-          children: [_buildList()],
+          children: [_buildList(), _buildBottom()],
         ),
       ))),
     );
   }
 
+  Widget _buildList() {
+    return SizedBox(
+        width: mediaSize.width,
+        child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+                child: SizedBox(
+                    height: 630,
+                    child: Card(
+                        color: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
+                        child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextUtil.buildBoldText("Pendientes"),
+                                    IntrinsicWidth(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            lista = lista.map((e) {
+                                              e.selected = true;
+                                              return e;
+                                            }).toList();
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          shape: const StadiumBorder(),
+                                          elevation: 20,
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 31, 172, 90),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 10),
+                                        ),
+                                        child: TextUtil.buildBoldText(
+                                          "Seleccionar todo",
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Expanded(
+                                  child: _buildPendings(),
+                                ),
+                              ],
+                            )))))));
+  }
+
   Widget _buildBottom() {
     return SizedBox(
-        height: 50,
         width: mediaSize.width,
-        child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 100),
+        child: Padding(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 0),
             child: ElevatedButton(
                 onPressed:
                     lista.where((element) => element.selected == true).isEmpty
@@ -97,95 +163,14 @@ class _ReportToAsignListAdminPageState
                                 "Enviando : ${lista.where((element) => element.selected == true)}");
                             _openBox();
                           },
-                style: ElevatedButton.styleFrom(
-                  shape: const StadiumBorder(),
-                  elevation: 20,
-                  backgroundColor: const Color.fromARGB(255, 31, 172, 90),
-                  minimumSize: const Size.fromHeight(60),
-                ),
-                child: const Text(
-                  "Asignar",
-                  style: TextStyle(color: Colors.white),
-                ))));
-  }
-
-  Widget _buildList() {
-    return SizedBox(
-        width: mediaSize.width,
-        height: 700,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            color: Colors.white,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            )),
-            child: Column(
-              children: [
-                Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Pendientes",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Quicksand'),
-                        ),
-                        SizedBox(
-                            width: 130,
-                            height: 40,
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    lista = lista.map((e) {
-                                      e.selected = true;
-                                      return e;
-                                    }).toList();
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: const StadiumBorder(),
-                                  elevation: 20,
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 31, 172, 90),
-                                  minimumSize: const Size.fromHeight(60),
-                                ),
-                                child: const Text(
-                                  "Seleccionar",
-                                  style: TextStyle(color: Colors.white),
-                                )))
-                      ],
-                    )),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: _buildPendings(),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                _buildBottom(),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
-        ));
+                style: ButtonUtil.buildGreenButton(),
+                child:
+                    TextUtil.buildBoldText("ASIGNAR", color: Colors.white))));
   }
 
   Widget _buildPendingElement(int index) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -196,10 +181,11 @@ class _ReportToAsignListAdminPageState
                     child: Icon(Icons.delete, size: 20),
                   ),
                   TextSpan(
-                    text: "Registro ${index + 1}",
+                    text: "Reporte ${index + 1}",
                     style: const TextStyle(
-                      color: Colors.black,
-                    ),
+                        color: Colors.black,
+                        fontFamily: 'Quicksand',
+                        fontSize: 15),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         ReportUtil.navigateToReportDetailPage(
@@ -244,56 +230,71 @@ class _ReportToAsignListAdminPageState
             child: AlertDialog(
                 scrollable: true,
                 backgroundColor: Colors.white,
-                title: const Text(
-                  'Asignar',
-                  textAlign: TextAlign.center,
-                ),
+                title: TextUtil.buildBoldText("ASIGNAR", centered: true),
                 content: FormBuilder(
                   key: _fbKey,
-                  child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Form(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                            FormBuilderDropdown(
-                                name: "responsible",
-                                focusColor: Colors.white,
-                                validator: FormBuilderValidators.compose([
-                                  FormBuilderValidators.required(),
-                                ]), //elevation: 5,
-                                decoration: const InputDecoration(
-                                  hintText: "Seleccionar Responsable",
-                                  hintMaxLines: 1,
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFFFF4240)),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFFFF4240)),
-                                  ),
-                                ),
-                                items: usuariosCleaners
-                                    .map((data) => DropdownMenuItem(
-                                        value: data.id,
-                                        child: Text(data.label!)))
-                                    .toList()),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            ElevatedButton(
-                              child: const Text("Asignar"),
-                              onPressed: () async {
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      FormBuilderDropdown(
+                        name: "responsible",
+                        focusColor: Colors.white,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText:
+                                  'Por favor selecciona un responsable.'),
+                        ]),
+                        decoration: const InputDecoration(
+                          hintText: "Seleccionar Responsable",
+                          hintStyle: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Quicksand',
+                              fontSize: 15),
+                          contentPadding: EdgeInsets.symmetric(vertical: 12.0),
+                          border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 1.0),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 1.0),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 31, 172, 90),
+                                width: 2.0),
+                          ),
+                          errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFFFF4240), width: 2.0),
+                          ),
+                          focusedErrorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFFFF4240), width: 2.0),
+                          ),
+                        ),
+                        items: usuariosCleaners
+                            .map((data) => DropdownMenuItem(
+                                value: data.id,
+                                child: TextUtil.buildBlackText(data.label!)))
+                            .toList(),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: isSending
+                            ? null
+                            : () async {
+                                setState(() {
+                                  isSending = true;
+                                });
                                 if (_fbKey.currentState?.saveAndValidate() ??
                                     false) {
-                                  if (this
-                                              .lista
-                                              .where((element) =>
-                                                  element.selected == true)
-                                              .length >
-                                          0 &&
+                                  if (lista
+                                          .where((element) =>
+                                              element.selected == true)
+                                          .isNotEmpty &&
                                       _fbKey.currentState?.fields['responsible']
                                               ?.value !=
                                           null) {
@@ -308,6 +309,10 @@ class _ReportToAsignListAdminPageState
                                     });
                                     await _saveResponsible(params);
                                     debugPrint(params);
+                                    setState(() {
+                                      isSending = false;
+                                    });
+                                    if (!mounted) return;
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -321,8 +326,12 @@ class _ReportToAsignListAdminPageState
                                   }
                                 }
                               },
-                            ),
-                          ]))),
+                        style: ButtonUtil.buildGreenButton(),
+                        child: TextUtil.buildBoldText("ASIGNAR",
+                            color: Colors.white),
+                      ),
+                    ],
+                  ),
                 )));
       },
     );

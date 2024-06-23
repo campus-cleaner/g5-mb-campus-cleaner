@@ -12,6 +12,7 @@ import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReportToSendFormUnmsmMemberPage extends StatefulWidget {
   final int currentIndex;
@@ -98,14 +99,16 @@ class _ReportToSendFormUnmsmMemberPageState
       if (_image == null) {
         await _requestCameraPermission();
       }
-
       if (_image != null && (_fbKey.currentState?.saveAndValidate() ?? false)) {
         final formData = _fbKey.currentState!.value;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? userName = prefs.getString('userName');
         if (mounted) {
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ReportToSendDetailUnmsmMemberPage(
+                      userName: userName ?? "San marquin@",
                       userTypeIndex: widget.userTypeIndex,
                       currentIndex: widget.currentIndex,
                       formData: formData,
@@ -283,11 +286,14 @@ class _ReportToSendFormUnmsmMemberPageState
             }
             if (_image != null && (validation ?? false)) {
               final formData = _fbKey.currentState!.value;
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              String? userName = prefs.getString('userName');
               if (mounted) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ReportToSendDetailUnmsmMemberPage(
+                            userName: userName!,
                             userTypeIndex: widget.userTypeIndex,
                             currentIndex: widget.currentIndex,
                             formData: formData,

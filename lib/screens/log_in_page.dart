@@ -26,6 +26,7 @@ class _LogInPageState extends State<LogInPage> {
   late Color myColor;
   late Size mediaSize;
   bool viewPassword = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -129,60 +130,85 @@ class _LogInPageState extends State<LogInPage> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-        onPressed: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          if (_fbKey.currentState?.saveAndValidate() ?? false) {
-            final user = _fbKey.currentState?.fields["email"]?.value;
-            final pass = _fbKey.currentState?.fields["password"]?.value;
-            var response = await loginService.login(
-                username: user, password: pass, tokenDevice: null);
-            if (!mounted) return;
-            if (response == null) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return const AlertWidget(
-                      title: "¡Error!",
-                      description: "El usuario no existe.",
-                      icon: "assets/images/fail.svg",
-                      isValid: false);
-                },
-              );
-              return;
-            }
-            await prefs.setString('token', response.token);
-            await prefs.setString('username', user);
-            if (!mounted) return;
-            if (response.rol == 'ADMIN') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ReportToAsignListAdminPage(
-                        userTypeIndex: Environment.adminIndex,
-                        currentIndex: 0)),
-              );
-            } else if (response.rol == 'CLEANER') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ReportToResolveListCleanerPage(
-                        userTypeIndex: Environment.cleanerIndex,
-                        currentIndex: 0)),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const WelcomeUnmsmMemberPage(
-                        userTypeIndex: Environment.unmsmMemberIndex,
-                        currentIndex: 0)),
-              );
-            }
-          }
-        },
+        onPressed: isLoading
+            ? null
+            : () async {
+                setState(() {
+                  isLoading = true;
+                });
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                if (_fbKey.currentState?.saveAndValidate() ?? false) {
+                  final user = _fbKey.currentState?.fields["email"]?.value;
+                  final pass = _fbKey.currentState?.fields["password"]?.value;
+                  var response = await loginService.login(
+                      username: user, password: pass, tokenDevice: null);
+                  if (!mounted) return;
+                  if (response == null) {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return const AlertWidget(
+                            title: "¡Error!",
+                            description: "El usuario no existe.",
+                            icon: "assets/images/fail.svg",
+                            isValid: false);
+                      },
+                    );
+                    setState(() {
+                      isLoading = false;
+                    });
+                    return;
+                  }
+                  await prefs.setString('token', response.token);
+                  await prefs.setString('userName', response.userName);
+                  if (!mounted) return;
+                  setState(() {
+                    isLoading = false;
+                  });
+                  if (response.rol == 'ADMIN') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const ReportToAsignListAdminPage(
+                                  userTypeIndex: Environment.adminIndex,
+                                  currentIndex: 0)),
+                    );
+                  } else if (response.rol == 'CLEANER') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const ReportToResolveListCleanerPage(
+                                  userTypeIndex: Environment.cleanerIndex,
+                                  currentIndex: 0)),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const WelcomeUnmsmMemberPage(
+                              userTypeIndex: Environment.unmsmMemberIndex,
+                              currentIndex: 0)),
+                    );
+                  }
+                }
+                setState(() {
+                  isLoading = false;
+                });
+              },
         style: ButtonUtil.buildGreenButton(),
-        child: TextUtil.buildBoldText("INICIAR", color: Colors.white));
+        child: isLoading
+            ? const SizedBox(
+                width: 24.0,
+                height: 24.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  strokeWidth: 3.0,
+                ),
+              )
+            : TextUtil.buildBoldText("INICIAR", color: Colors.white));
   }
 
   Widget _signup() {

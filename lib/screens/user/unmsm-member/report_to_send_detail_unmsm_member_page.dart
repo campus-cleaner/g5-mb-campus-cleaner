@@ -11,6 +11,7 @@ import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/report_card_widget.dart';
 
 class ReportToSendDetailUnmsmMemberPage extends StatefulWidget {
+  final String userName;
   final int currentIndex;
   final int userTypeIndex;
   final Map<String, dynamic> formData;
@@ -20,6 +21,7 @@ class ReportToSendDetailUnmsmMemberPage extends StatefulWidget {
   final double longitude;
   const ReportToSendDetailUnmsmMemberPage(
       {super.key,
+      required this.userName,
       required this.formData,
       required this.dateTime,
       required this.image,
@@ -79,7 +81,7 @@ class _ReportToSendDetailUnmsmMemberPageState
           ? null
           : () async {
               setState(() {
-                isSending = true; // Cambiar a true cuando se inicie el envío
+                isSending = true;
               });
               await _validateImage();
               if (mounted) {
@@ -110,6 +112,7 @@ class _ReportToSendDetailUnmsmMemberPageState
 
   Widget _buildTop() {
     return ReportCardWidget(
+      userName: widget.userName,
       latitude: widget.latitude,
       longitude: widget.longitude,
       dateTime: widget.dateTime,

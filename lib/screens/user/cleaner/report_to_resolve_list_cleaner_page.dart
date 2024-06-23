@@ -93,7 +93,7 @@ class _ReportToResolveListCleanerPageState
             padding: const EdgeInsets.all(20.0),
             child: Center(
                 child: SizedBox(
-                    height: 700,
+                    height: 630,
                     child: Card(
                         color: Colors.white,
                         shape: const RoundedRectangleBorder(
