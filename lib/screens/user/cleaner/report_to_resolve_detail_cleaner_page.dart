@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/screens/user/cleaner/report_to_resolve_list_cleaner_page.dart';
@@ -11,6 +10,7 @@ import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/report_card_widget.dart';
 
 class ReportToResolveDetailCleanerPage extends StatefulWidget {
+  final String userName;
   final int currentIndex;
   final int userTypeIndex;
   final String reference;
@@ -21,6 +21,7 @@ class ReportToResolveDetailCleanerPage extends StatefulWidget {
   final double longitude;
   const ReportToResolveDetailCleanerPage(
       {super.key,
+      required this.userName,
       required this.currentIndex,
       required this.userTypeIndex,
       required this.reference,
@@ -93,6 +94,7 @@ class _ReportToResolveDetailCleanerPageState
 
   Widget _buildTop() {
     return ReportCardWidget(
+      userName: widget.userName,
       latitude: widget.latitude,
       longitude: widget.longitude,
       dateTime: widget.dateTime,

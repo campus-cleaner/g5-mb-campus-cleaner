@@ -48,16 +48,14 @@ class _NewsUserPageState extends State<NewsUserPage> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/new_fisi.png"),
-            fit: BoxFit.contain,
+            fit: BoxFit.fitWidth,
           ),
         ),
         child: Column(
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(),
-              ],
+              children: <Widget>[Container()],
             ),
           ],
         ),
@@ -70,29 +68,32 @@ class _NewsUserPageState extends State<NewsUserPage> {
       width: mediaSize.width,
       padding: const EdgeInsets.all(20.0),
       child: Center(
-        child: Card(
-          color: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(30)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: _buildPendings(),
-          ),
-        ),
-      ),
+          child: SizedBox(
+              height: 600,
+              child: Card(
+                color: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: _buildPendings(),
+                ),
+              ))),
     );
   }
 
   Widget _buildPendings() {
+    int itemCount = 3;
     return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: 3,
+      itemCount: itemCount,
       itemBuilder: (context, position) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: _buildElement(),
+        return Column(
+          children: [
+            _buildElement(),
+            if (position != itemCount - 1) const SizedBox(height: 20),
+          ],
         );
       },
     );
