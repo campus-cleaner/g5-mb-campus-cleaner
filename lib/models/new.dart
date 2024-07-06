@@ -2,7 +2,7 @@
 class New {
   int id;
   String title;
-  String urlExternal;
+  String? urlExternal;
   String urlImagen;
 
 

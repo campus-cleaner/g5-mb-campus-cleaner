@@ -174,6 +174,19 @@ class ReportService {
     var responseMsg = Response.fromJson(decoded);
     return responseMsg;
   }
+  Future<Response> markAsResolved(int params) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final response = await http.get(
+      Uri.parse('${Environment.apiUrl}/report/resolveReport/$params'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${prefs.getString('token')}'
+      },
+    );
+    final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+    var responseMsg = Response.fromJson(decoded);
+    return responseMsg;
+  }
 
   Future<File> getImage(String id) async {
     File imageFile = await ImageUtil.getFileFromAsset(

@@ -1,6 +1,6 @@
 
 class PendingReport {
-  int? id;
+  int id;
   String? reference;
   String? imageRoute;
   double? latitude;
@@ -13,7 +13,7 @@ class PendingReport {
   bool? selected;
 
   PendingReport(
-      {this.id, this.reference, this.imageRoute, this.latitude, this.longitude, this.comment, this.userRegister, this.idUserRegister, this.status, this.dateReport, this.selected = false});
+      {required this.id, this.reference, this.imageRoute, this.latitude, this.longitude, this.comment, this.userRegister, this.idUserRegister, this.status, this.dateReport, this.selected = false});
 
   factory PendingReport.fromJson(Map<String, dynamic> json) => PendingReport(
         id: json['id'],

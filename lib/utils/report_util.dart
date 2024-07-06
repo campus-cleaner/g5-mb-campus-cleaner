@@ -12,8 +12,9 @@ class ReportUtil {
       required PendingReport report,
       required int userTypeIndex,
       required int currentIndex}) async {
-    File imageFile = await ImageUtil.getFileFromAsset(
-        "assets/images/garbage.png", "garbage.png");
+    final service = ReportService();
+    final response = await service.getImage(report.id.toString());
+    File imageFile = response;
     if (context.mounted) {
       Navigator.push(
         context,
@@ -47,6 +48,7 @@ class ReportUtil {
         context,
         MaterialPageRoute(
           builder: (context) => ReportToResolveDetailCleanerPage(
+            id: report.id,
             userName: report.userRegister!,
             userTypeIndex: userTypeIndex,
             currentIndex: currentIndex,

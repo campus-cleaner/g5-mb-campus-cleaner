@@ -15,7 +15,7 @@ import 'package:mime/mime.dart';
 
 class NewsService {
   NewsService();
-  Future<List<New>> getMyReports() async {
+  Future<List<New>> getNews() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final response = await http.get(
@@ -36,24 +36,32 @@ class NewsService {
     return [];
   }
 
-  Future<Response> saveNew(String title, String urlExternal, File file) async {
+  Future<Response> saveNew(int? id, String title, String urlExternal, File file) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final request = http.MultipartRequest(
       "POST",
-      Uri.parse('${Environment.apiUrl}/report/registerPhoto'),
+      Uri.parse('${Environment.apiUrl}/news/saveNew'),
     );
+    Map<String, String> requestBody = <String,String>{
+      'title':title,
+      'urlExternal': urlExternal,
+      'isExternal': 'true'
+    };
+    if(id != null) {
+      requestBody.addAll({'id': id.toString()});
+    }
     String? mimeType = lookupMimeType(file.path);
     mimeType ??= 'application/octet-stream';
     request.files.add(
       http.MultipartFile.fromBytes(
-        'photo',
+        'image',
         await file.readAsBytes(),
         filename: file.path.split('/').last,
         contentType: MediaType.parse(mimeType),
       ),
     );
 
-    //request.fields.addAll()
+    request.fields.addAll(requestBody);
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
     headers.addAll({"Authorization": 'Bearer ${prefs.getString('token')}'});
     request.headers.addAll(headers);

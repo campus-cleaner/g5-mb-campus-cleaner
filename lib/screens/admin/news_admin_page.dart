@@ -1,12 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:g5_mb_campus_cleaner/models/new.dart';
+import 'package:g5_mb_campus_cleaner/services/file_service.dart';
+import 'package:g5_mb_campus_cleaner/services/news_service.dart';
 import 'package:g5_mb_campus_cleaner/utils/button_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/logger_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
 import 'package:g5_mb_campus_cleaner/widgets/custom_app_bar_widget.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NewsAdminPage extends StatefulWidget {
   final int currentIndex;
@@ -22,6 +28,7 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
   late Color myColor;
   late Size mediaSize;
   bool isSending = false;
+  List<New> lista = [];
 
   @override
   Widget build(BuildContext context) {
@@ -42,20 +49,23 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
                   image: AssetImage("assets/images/bg_2.png"),
                   fit: BoxFit.cover),
             ),
-            child: _buildList(),
+            child: Column(children: [_buildList(), _buildBottom()]),
           ),
+
         ),
       ),
     );
   }
 
-  Widget _buildElement() {
+  Widget _buildElement(int position) {
+    final service = FileService();
+    String url = service.getUrlImageFromServer(lista[position].urlImagen);
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/new_fisi.png"),
+            image: NetworkImage(url),
             fit: BoxFit.fitWidth,
           ),
         ),
@@ -75,7 +85,8 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
                   child: IconButton(
                     color: Colors.black,
                     onPressed: () {
-                      _openBox();
+                      isSending = false;
+                      _openBox(lista[position].id, 'EDITAR NOTICIA');
                     },
                     icon: const Icon(Icons.edit_square),
                   ),
@@ -107,16 +118,48 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
               ))),
     );
   }
+  @override
+  void initState() {
+    super.initState();
+    _getNews();
+    isSending = false;
+  }
+  Widget _buildBottom() {
+    return SizedBox(
+        width: mediaSize.width,
+        child: Padding(
+            padding:
+            const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 0),
+            child: ElevatedButton(
+                onPressed:()  {
+                isSending = false;
+                _openBox(null, 'REGISTRAR NOTICIA');
+                },
+                style: ButtonUtil.buildGreenButton(),
+                child:
+                TextUtil.buildBoldText("Nuevo", color: Colors.white))));
+  }
 
-  Future<void> _openBox() async {
+  void _getNews() async {
+      final service = NewsService();
+      final response = await service.getNews();
+      if (mounted) {
+        setState(() {
+          isSending = false;
+          lista = response;
+        });
+      }
+  }
+  Future<void> _openBox(int? id, String titleModal) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final service = NewsService();
         return SafeArea(
             child: AlertDialog(
                 scrollable: true,
                 backgroundColor: Colors.white,
-                title: TextUtil.buildBoldText("EDITAR NOTICIA", centered: true),
+                title: TextUtil.buildBoldText(titleModal, centered: true),
                 content: FormBuilder(
                   key: _fbKey,
                   autovalidateMode: AutovalidateMode.disabled,
@@ -124,13 +167,87 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
                     _fbKey.currentState!.save();
                   },
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      FormBuilderTextField(
+                        name: "title",
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText:
+                              'Por favor ingrese el título de la noticia.'),
+                        ]),
+                        decoration: const InputDecoration(
+                          hintText: "Ingresar título",
+                          hintStyle: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Quicksand',
+                              fontSize: 15),
+                          contentPadding: EdgeInsets.symmetric(vertical: 12.0),
+                          border: UnderlineInputBorder(
+                            borderSide:
+                            BorderSide(color: Colors.grey, width: 1.0),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide:
+                            BorderSide(color: Colors.grey, width: 1.0),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 31, 172, 90),
+                                width: 2.0),
+                          ),
+                          errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFFFF4240), width: 2.0),
+                          ),
+                          focusedErrorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFFFF4240), width: 2.0),
+                          ),
+                        ),
+                      ),
+                      FormBuilderTextField(
+                        name: "urlExternal",
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText:
+                              'Por favor ingrese la URL de la noticia.'),
+                        ]),
+                        decoration: const InputDecoration(
+                          hintText: "Ingresar la URL",
+                          hintStyle: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Quicksand',
+                              fontSize: 15),
+                          contentPadding: EdgeInsets.symmetric(vertical: 12.0),
+                          border: UnderlineInputBorder(
+                            borderSide:
+                            BorderSide(color: Colors.grey, width: 1.0),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide:
+                            BorderSide(color: Colors.grey, width: 1.0),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 31, 172, 90),
+                                width: 2.0),
+                          ),
+                          errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFFFF4240), width: 2.0),
+                          ),
+                          focusedErrorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFFFF4240), width: 2.0),
+                          ),
+                        ),
+                      ),
+
                       SizedBox(
                         width: 300.0,
-                        height: 72.0,
-                        child: FormBuilderFilePicker(
+                        height: 86.0,
+                        child: ListView(children: [
+                          FormBuilderFilePicker(
                           name: "image",
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(
@@ -143,14 +260,14 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
                                 fontFamily: 'Quicksand',
                                 fontSize: 15),
                             contentPadding:
-                                EdgeInsets.symmetric(vertical: 12.0),
+                            EdgeInsets.symmetric(vertical: 12.0),
                             border: UnderlineInputBorder(
                               borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0),
+                              BorderSide(color: Colors.grey, width: 1.0),
                             ),
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0),
+                              BorderSide(color: Colors.grey, width: 1.0),
                             ),
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
@@ -183,45 +300,7 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      FormBuilderTextField(
-                        name: "url",
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText:
-                                  'Por favor ingrese la URL de la noticia.'),
-                        ]),
-                        decoration: const InputDecoration(
-                          hintText: "Ingresar la URL",
-                          hintStyle: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Quicksand',
-                              fontSize: 15),
-                          contentPadding: EdgeInsets.symmetric(vertical: 12.0),
-                          border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 1.0),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 1.0),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 31, 172, 90),
-                                width: 2.0),
-                          ),
-                          errorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color(0xFFFF4240), width: 2.0),
-                          ),
-                          focusedErrorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color(0xFFFF4240), width: 2.0),
-                          ),
-                        ),
+                        ),],)
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
@@ -233,12 +312,15 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
                                 });
                                 if (_fbKey.currentState?.saveAndValidate() ??
                                     false) {
-                                  final image = _fbKey
+                                  final List<PlatformFile> image = _fbKey
                                       .currentState?.fields['image']!.value;
-                                  final url =
-                                      _fbKey.currentState?.fields['url']!.value;
-                                  LoggerUtil.logInfo(image);
-                                  LoggerUtil.logInfo(url);
+                                  final title =
+                                      _fbKey.currentState?.fields['title']!.value;
+                                  final urlExternal =
+                                      _fbKey.currentState?.fields['urlExternal']!.value;
+                                  LoggerUtil.logInfo(image[0].path ?? '');
+                                  File file = new File(image[0].path!);
+                                  await service.saveNew(id, title, urlExternal, file);
                                   setState(() {
                                     isSending = false;
                                   });
@@ -264,18 +346,17 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
   }
 
   Widget _buildNews() {
-    int itemCount = 3;
     return ListView.builder(
-      shrinkWrap: true,
-      itemCount: itemCount,
-      itemBuilder: (context, position) {
-        return Column(
-          children: [
-            _buildElement(),
-            if (position != itemCount - 1) const SizedBox(height: 20),
-          ],
-        );
-      },
-    );
+        shrinkWrap: true,
+        itemCount: lista.length,
+
+        itemBuilder: (context, position) {
+          return Column(
+            children: [
+              _buildElement(position),
+              if (position != lista.length - 1) const SizedBox(height: 20),
+            ],
+          );
+        });
   }
 }
