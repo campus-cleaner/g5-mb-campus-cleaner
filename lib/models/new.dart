@@ -1,22 +1,25 @@
 
 class New {
   int id;
-  String label;
+  String title;
+  String urlExternal;
   String urlImagen;
 
 
   New(
-      {required this.id, required this.label, required this.urlImagen});
+      {required this.id, required this.title, required this.urlExternal, required this.urlImagen});
 
   factory New.fromJson(Map<String, dynamic> json) => New(
     id: json["id"],
-    label: json["label"],
+    title: json["title"],
+    urlExternal: json["urlExternal"],
     urlImagen: json["urlImagen"],
+
 
   );
 
   @override
   String toString() {
-    return 'CleanerPersonal{id: $id, label: $label}';
+    return 'CleanerPersonal{id: $id, label: $title}';
   }
 }

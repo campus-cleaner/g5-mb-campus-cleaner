@@ -102,7 +102,7 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: _buildPendings(),
+                  child: _buildNews(),
                 ),
               ))),
     );
@@ -263,7 +263,7 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
     );
   }
 
-  Widget _buildPendings() {
+  Widget _buildNews() {
     int itemCount = 3;
     return ListView.builder(
       shrinkWrap: true,

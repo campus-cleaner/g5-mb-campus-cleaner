@@ -26,17 +26,6 @@ class _ReportToResolveListCleanerPageState
 
   List<UserCombo> usuariosCleaners = [];
   List<PendingReport> lista = [
-    PendingReport(
-        id: 0,
-        reference: "Huaca",
-        imageRoute: "./.",
-        latitude: 5.8,
-        longitude: 6.0,
-        comment: "dffs",
-        userRegister: "Nicole Morales",
-        idUserRegister: 1,
-        status: "Resuelto",
-        dateReport: FormatTextUtil.formatDateTime(DateTime.now()))
   ];
   @override
   void initState() {
@@ -49,7 +38,7 @@ class _ReportToResolveListCleanerPageState
     final service = ReportService();
     final response = await service.getReportsToAttend();
     setState(() {
-      //lista = response;
+      lista = response;
     });
   }
 
