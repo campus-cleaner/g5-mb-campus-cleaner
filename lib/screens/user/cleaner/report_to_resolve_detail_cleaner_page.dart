@@ -23,7 +23,7 @@ class ReportToResolveDetailCleanerPage extends StatefulWidget {
   final double longitude;
   const ReportToResolveDetailCleanerPage(
       {super.key,
-        required this.id,
+      required this.id,
       required this.userName,
       required this.currentIndex,
       required this.userTypeIndex,
@@ -43,6 +43,8 @@ class _ReportToResolveDetailCleanerPageState
   late Color myColor;
   late Size mediaSize;
   List<PendingReport> lista = [];
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     myColor = Theme.of(context).primaryColor;
@@ -68,19 +70,29 @@ class _ReportToResolveDetailCleanerPageState
 
   Widget _buildBottom() {
     return ElevatedButton(
-        onPressed: () async {
-          final service = ReportService();
-          await service.markAsResolved(widget.id);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ReportToResolveListCleanerPage(
-                    userTypeIndex: widget.userTypeIndex,
-                    currentIndex: widget.currentIndex)),
-          );
-        },
+        onPressed: _isLoading
+            ? null
+            : () async {
+                setState(() {
+                  _isLoading = true;
+                });
+                final service = ReportService();
+                await service.markAsResolved(widget.id);
+                setState(() {
+                  _isLoading = false;
+                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ReportToResolveListCleanerPage(
+                          userTypeIndex: widget.userTypeIndex,
+                          currentIndex: widget.currentIndex)),
+                );
+              },
         style: ButtonUtil.buildGreenButton(),
-        child: TextUtil.buildBoldText("RESUELTO", color: Colors.white));
+        child: _isLoading
+            ? const CircularProgressIndicator(color: Colors.white)
+            : TextUtil.buildBoldText("RESUELTO", color: Colors.white));
   }
 
   Widget _buildContent() {

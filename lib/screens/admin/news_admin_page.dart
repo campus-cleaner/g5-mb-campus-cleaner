@@ -135,7 +135,7 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
                   _openBox(null, 'REGISTRAR NOTICIA');
                 },
                 style: ButtonUtil.buildGreenButton(),
-                child: TextUtil.buildBoldText("Nuevo", color: Colors.white))));
+                child: TextUtil.buildBoldText("NUEVO", color: Colors.white))));
   }
 
   void _getNews() async {
