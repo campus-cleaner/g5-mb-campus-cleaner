@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/models/users_combo.dart';
 import 'package:g5_mb_campus_cleaner/services/reports_service.dart';
-import 'package:g5_mb_campus_cleaner/utils/format_text_util.dart';
+import 'package:g5_mb_campus_cleaner/utils/image_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/text_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/report_util.dart';
 import 'package:g5_mb_campus_cleaner/widgets/app_navigation_bar_widget.dart';
@@ -25,8 +27,10 @@ class _ReportToResolveListCleanerPageState
   late Size mediaSize;
 
   List<UserCombo> usuariosCleaners = [];
-  List<PendingReport> lista = [
-  ];
+  List<PendingReport> lista = [];
+  bool isLoading =
+      false; // Variable para controlar la visibilidad del círculo de carga
+
   @override
   void initState() {
     super.initState();
@@ -60,18 +64,27 @@ class _ReportToResolveListCleanerPageState
       bottomNavigationBar: AppNavigationBarWidget(
           currentIndex: widget.currentIndex,
           userTypeIndex: widget.userTypeIndex),
-      body: Scrollbar(
-          child: SingleChildScrollView(
-              child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
-          image: DecorationImage(
-              image: AssetImage("assets/images/bg_2.png"), fit: BoxFit.cover),
-        ),
-        child: Column(
-          children: [_buildList()],
-        ),
-      ))),
+      body: Stack(
+        children: [
+          Scrollbar(
+              child: SingleChildScrollView(
+                  child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+              image: DecorationImage(
+                  image: AssetImage("assets/images/bg_2.png"),
+                  fit: BoxFit.cover),
+            ),
+            child: Column(
+              children: [_buildList()],
+            ),
+          ))),
+          if (isLoading)
+            const Center(
+              child: CircularProgressIndicator(color: Colors.black),
+            ),
+        ],
+      ),
     );
   }
 
@@ -131,12 +144,24 @@ class _ReportToResolveListCleanerPageState
                         fontFamily: 'Quicksand',
                         fontSize: 15),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        ReportUtil.navigateToReportToResolveDetailCleanerPage(
-                            context: context,
-                            report: lista.elementAt(index),
-                            userTypeIndex: widget.userTypeIndex,
-                            currentIndex: widget.currentIndex);
+                      ..onTap = () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        File image = await ImageUtil.getFileFromServer(
+                          lista.elementAt(index).imageRoute!,
+                        );
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (mounted) {
+                          ReportUtil.navigateToReportToResolveDetailCleanerPage(
+                              context: context,
+                              image: image,
+                              report: lista.elementAt(index),
+                              userTypeIndex: widget.userTypeIndex,
+                              currentIndex: widget.currentIndex);
+                        }
                       },
                   )
                 ],
