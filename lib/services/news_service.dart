@@ -2,14 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:g5_mb_campus_cleaner/global/env.dart';
 import 'package:g5_mb_campus_cleaner/models/new.dart';
-import 'package:g5_mb_campus_cleaner/models/pending_report.dart';
 import 'package:g5_mb_campus_cleaner/models/response.dart';
-import 'package:g5_mb_campus_cleaner/models/users_combo.dart';
-import 'package:g5_mb_campus_cleaner/utils/image_util.dart';
 import 'package:g5_mb_campus_cleaner/utils/logger_util.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 
@@ -104,6 +100,4 @@ class NewsService {
     var responseMsg = Response.fromJson(decoded);
     return responseMsg;
   }
-
-
 }
