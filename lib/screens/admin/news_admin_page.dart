@@ -321,7 +321,7 @@ class _NewsAdminPageState extends State<NewsAdminPage> {
                                   final urlExternal = _fbKey.currentState
                                       ?.fields['urlExternal']!.value;
                                   LoggerUtil.logInfo(image[0].path ?? '');
-                                  File file = new File(image[0].path!);
+                                  File file = File(image[0].path!);
                                   await service.saveNew(
                                       id, title, urlExternal, file);
                                   setState(() {
